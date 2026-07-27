@@ -6,6 +6,7 @@ import '../../models/plan_item.dart';
 import '../../models/plan_summary.dart';
 import '../../models/reward_forecast.dart';
 import '../../models/student_dataset.dart';
+import '../../models/student_profile.dart';
 import 'message_bank.dart';
 
 enum _LoadTier { increase, keep, decrease10, decrease20, requiredOnly }
@@ -66,11 +67,20 @@ class PlanGenerationLogic {
     required StudentDataset dataset,
     required DateTime date,
     List<IncompletePlan>? carryOverOverride,
+    StudentCondition? condition,
   }) {
+    final effectiveCondition = condition ?? dataset.student.condition;
+    // Spec section 6: very_tired/sick force a required-only day regardless of
+    // recent achievement rate; tired/stressed apply an extra load reduction
+    // on top of the achievement-based tier instead of overriding it.
+    final conditionForcesRequiredOnly =
+        effectiveCondition == StudentCondition.veryTired || effectiveCondition == StudentCondition.sick;
+
     final dateStr =
         '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
     final carryOver = carryOverOverride ?? dataset.incompletePlans;
-    final tier = _resolveLoadTier(dataset.recentPerformance.dailyAchievementRate7Days);
+    final achievementTier = _resolveLoadTier(dataset.recentPerformance.dailyAchievementRate7Days);
+    final tier = conditionForcesRequiredOnly ? _LoadTier.requiredOnly : achievementTier;
 
     final fixedItems = _buildFixedItems(dataset.fixedSchedules);
     final windows = _computeWindows(dataset, fixedItems);
@@ -79,7 +89,8 @@ class PlanGenerationLogic {
     final carryOverUnits = _buildCarryOverUnits(carryOver);
     final recommendedUnits = _buildRecommendedUnits(dataset);
 
-    final targetStudyMinutes = _targetStudyMinutes(dataset, tier);
+    final conditionMultiplier = _conditionLoadMultiplier(effectiveCondition);
+    final targetStudyMinutes = (_targetStudyMinutes(dataset, tier) * conditionMultiplier).round();
 
     final placed = <PlanItem>[];
     var seq = 1;
@@ -194,7 +205,9 @@ class PlanGenerationLogic {
       resequenced.add(_withSequence(merged[i], i + 1));
     }
 
-    resequenced = _enforceHardDifficultyCap(resequenced);
+    final hardCapRatio =
+        effectiveCondition == StudentCondition.tired || effectiveCondition == StudentCondition.stressed ? 0.25 : 0.4;
+    resequenced = _enforceHardDifficultyCap(resequenced, hardCapRatio);
 
     final requiredMinutes = resequenced
         .where((p) => p.required && p.planType != PlanType.fixed && p.planType != PlanType.breakTime)
@@ -222,7 +235,7 @@ class PlanGenerationLogic {
       planConfidenceScore: _planConfidenceScore(tier),
     );
 
-    final generationReasons = _buildGenerationReasons(dataset, tier, date, carryOverDecisions);
+    final generationReasons = _buildGenerationReasons(dataset, tier, date, carryOverDecisions, effectiveCondition);
 
     final rewardForecast = RewardForecast(
       estimatedPlanStickerReward: resequenced
@@ -258,12 +271,15 @@ class PlanGenerationLogic {
       dailyPlans: resequenced,
       generationReasons: generationReasons,
       studentMessage: StudentMessage(
-        title: MessageBank.studentMessageTitle(dataset.student.condition.wireValue),
+        title: MessageBank.studentMessageTitle(effectiveCondition.wireValue),
         message: MessageBank.studentMessageBody(
           leastCompletedSubject: dataset.recentPerformance.leastCompletedSubject,
-          reducedLoad: tier == _LoadTier.decrease10 || tier == _LoadTier.decrease20 || tier == _LoadTier.requiredOnly,
+          reducedLoad: tier == _LoadTier.decrease10 ||
+              tier == _LoadTier.decrease20 ||
+              tier == _LoadTier.requiredOnly ||
+              conditionMultiplier < 1.0,
         ),
-        tone: 'encouraging',
+        tone: conditionForcesRequiredOnly || effectiveCondition == StudentCondition.stressed ? 'concerned' : 'encouraging',
       ),
       parentMessage: ParentMessage(
         summary:
@@ -273,12 +289,15 @@ class PlanGenerationLogic {
           if (carryOverDecisions.isNotEmpty) '전날 미완료 학습이 있어 분량을 줄여 재배치했습니다.',
           if (dataset.recentPerformance.dailyAchievementRate7Days < 75)
             '${dataset.recentPerformance.leastCompletedSubject} 달성률이 최근 낮은 편입니다.',
+          if (conditionForcesRequiredOnly) '학생 컨디션(${effectiveCondition.wireValue}) 확인이 필요해요.',
         ],
-        approvalRequired: false,
+        approvalRequired: conditionForcesRequiredOnly,
       ),
       rewardForecast: rewardForecast,
       carryOverDecisions: carryOverDecisions,
-      warnings: const [],
+      warnings: [
+        if (effectiveCondition == StudentCondition.sick) '학생이 아픈 컨디션이에요. 학습보다 휴식을 우선해 주세요.',
+      ],
       validation: PlanValidation(
         fixedScheduleConflict: false,
         exceedsMaximumStudyTime: (requiredMinutes + recommendedMinutes) > dataset.parentSettings.maxDailyStudyMinutes,
@@ -318,6 +337,25 @@ class PlanGenerationLogic {
         return (base * 0.8).round();
       case _LoadTier.requiredOnly:
         return 0;
+    }
+  }
+
+  /// Spec section 6: extra load adjustment layered on top of the
+  /// achievement-based tier. very_tired/sick are already forced to
+  /// requiredOnly (target 0) upstream, so their multiplier here is moot.
+  static double _conditionLoadMultiplier(StudentCondition condition) {
+    switch (condition) {
+      case StudentCondition.veryGood:
+      case StudentCondition.good:
+      case StudentCondition.normal:
+        return 1.0;
+      case StudentCondition.tired:
+        return 0.85;
+      case StudentCondition.stressed:
+        return 0.7;
+      case StudentCondition.veryTired:
+      case StudentCondition.sick:
+        return 0.0;
     }
   }
 
@@ -553,11 +591,11 @@ class PlanGenerationLogic {
     return units;
   }
 
-  static List<PlanItem> _enforceHardDifficultyCap(List<PlanItem> items) {
+  static List<PlanItem> _enforceHardDifficultyCap(List<PlanItem> items, double hardCapRatio) {
     final studyItems = items.where((p) => p.planType != PlanType.fixed && p.planType != PlanType.breakTime).toList();
     if (studyItems.isEmpty) return items;
     var hardCount = studyItems.where((p) => p.difficulty == Difficulty.hard).length;
-    final maxHard = (studyItems.length * 0.4).floor();
+    final maxHard = (studyItems.length * hardCapRatio).floor();
     if (hardCount <= maxHard) return items;
 
     final result = [...items];
@@ -584,10 +622,14 @@ class PlanGenerationLogic {
     _LoadTier tier,
     DateTime date,
     List<CarryOverDecision> carryOverDecisions,
+    StudentCondition condition,
   ) {
     final reasons = <String>[
       MessageBank.loadTierReason(_tierLabel(tier), dataset.recentPerformance.dailyAchievementRate7Days),
     ];
+    if (condition != StudentCondition.normal && condition != StudentCondition.good && condition != StudentCondition.veryGood) {
+      reasons.add(MessageBank.conditionAdjustmentReason(condition));
+    }
     for (final exam in dataset.exams) {
       reasons.add(MessageBank.examProximityReason(exam.subject, exam.daysUntil(date)));
     }

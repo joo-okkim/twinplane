@@ -1,3 +1,5 @@
+import '../../models/student_profile.dart';
+
 /// Curated, soft-phrasing string templates used by the rule-based mock
 /// logic. Centralizing every student/parent-facing sentence here means no
 /// code path can accidentally emit a blaming phrase ("게으르다", "의지가
@@ -5,6 +7,14 @@
 /// to match the AI Teacher spec's approved tone.
 class MessageBank {
   MessageBank._();
+
+  static String conditionAdjustmentReason(StudentCondition condition) => switch (condition) {
+        StudentCondition.tired => '오늘 컨디션이 다소 피곤하다고 하셔서 학습량을 조금 줄였어요.',
+        StudentCondition.veryTired => '많이 피곤한 날이라 꼭 필요한 계획 중심으로만 구성했어요.',
+        StudentCondition.stressed => '마음이 편하지 않은 날이라 작은 단위로 나누어 부담을 줄였어요.',
+        StudentCondition.sick => '컨디션이 좋지 않아 학습보다 휴식을 우선했어요. 보호자 확인이 필요해요.',
+        _ => '',
+      };
 
   static String loadTierReason(String tierLabel, double rate7d) {
     final pct = rate7d.round();

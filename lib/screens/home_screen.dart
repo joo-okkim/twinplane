@@ -59,7 +59,15 @@ class HomeScreen extends StatelessWidget {
                 studentName: planProvider.studentName,
                 streakDays: planProvider.streakDays,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
+              _ConditionCheckCard(
+                selected: planProvider.selectedCondition,
+                onSelect: (condition) {
+                  reviewProvider.resetForNewDay();
+                  planProvider.loadPlanFor(date, condition: condition);
+                },
+              ),
+              const SizedBox(height: 14),
               if (plan != null)
                 _AiHeroCard(plan: plan, onStart: onViewPlan)
               else
@@ -247,6 +255,63 @@ class _HomeHeader extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+/// "오늘 컨디션은 어떤가요?" check-in -- spec section 6: the student's
+/// self-reported condition feeds directly into today's load adjustment
+/// (see PlanGenerationLogic._conditionLoadMultiplier), not just cosmetic.
+class _ConditionCheckCard extends StatelessWidget {
+  const _ConditionCheckCard({required this.selected, required this.onSelect});
+
+  final StudentCondition? selected;
+  final ValueChanged<StudentCondition> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 3))],
+      ),
+      child: Row(
+        children: [
+          const Text('오늘 컨디션은?', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+          const Spacer(),
+          for (final condition in conditionPickerOptions) _conditionButton(condition),
+        ],
+      ),
+    );
+  }
+
+  Widget _conditionButton(StudentCondition condition) {
+    final isSelected = selected == condition;
+    return Padding(
+      padding: const EdgeInsets.only(left: 6),
+      child: Tooltip(
+        message: conditionLabel(condition),
+        child: InkWell(
+          onTap: () => onSelect(condition),
+          borderRadius: BorderRadius.circular(20),
+          child: Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: isSelected ? AppColors.primaryLight : Colors.transparent,
+              shape: BoxShape.circle,
+              border: isSelected ? Border.all(color: AppColors.primary, width: 1.5) : null,
+            ),
+            child: Icon(
+              conditionIcon(condition),
+              size: 20,
+              color: isSelected ? AppColors.primary : AppColors.gray,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

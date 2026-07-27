@@ -9,10 +9,11 @@ import '../theme/app_colors.dart';
 import '../widgets/app_bottom_nav.dart';
 import '../widgets/generation_reasons_panel.dart';
 import 'home_screen.dart';
+import 'reward_screen.dart';
 import 'today_plan_screen.dart';
 
-/// Hosts the single bottom nav bar shared by every tab. Only 홈/학습 are
-/// implemented today; 보상/마이 surface a "coming soon" snackbar instead of
+/// Hosts the single bottom nav bar shared by every tab. 홈/학습/보상 are
+/// implemented today; 마이 surfaces a "coming soon" snackbar instead of
 /// switching tabs. The floating "AI 코치" button opens a quick-action sheet
 /// wired to real plan-modification/regeneration calls rather than a chat UI.
 class MainShell extends StatefulWidget {
@@ -29,7 +30,7 @@ class _MainShellState extends State<MainShell> {
 
   void _onNavTap(int index) {
     if (index == _navIndex) return;
-    if (index != 0 && index != 1) {
+    if (index == 3) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('준비 중이에요.')));
       return;
     }
@@ -138,6 +139,8 @@ class _MainShellState extends State<MainShell> {
         children: [
           HomeScreen(onViewPlan: _goToPlanTab),
           const TodayPlanScreen(),
+          const RewardScreen(),
+          const SizedBox.shrink(),
         ],
       ),
       bottomNavigationBar: AppBottomNav(currentIndex: _navIndex, onTap: _onNavTap, onAiTap: _showAiQuickActions),

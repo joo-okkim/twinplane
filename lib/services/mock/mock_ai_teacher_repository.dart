@@ -1,10 +1,12 @@
 import 'dart:math';
 
+import '../../models/allowance_policy.dart';
 import '../../models/daily_plan_response.dart';
 import '../../models/daily_review_request.dart';
 import '../../models/daily_review_response.dart';
 import '../../models/exam_info.dart';
 import '../../models/incomplete_plan.dart';
+import '../../models/sticker_policy.dart';
 import '../../models/student_profile.dart';
 import '../../models/modification_request.dart';
 import '../../models/modification_result.dart';
@@ -44,6 +46,12 @@ class MockAiTeacherRepository implements AiTeacherRepository {
   @override
   List<SubjectLevel> get subjectLevels => _dataset.subjectLevels;
 
+  @override
+  StickerPolicy get stickerPolicy => _dataset.stickerPolicy;
+
+  @override
+  AllowancePolicy get allowancePolicy => _dataset.allowancePolicy;
+
   Future<void> _simulateLatency() =>
       Future.delayed(Duration(milliseconds: 400 + _random.nextInt(400)));
 
@@ -51,6 +59,7 @@ class MockAiTeacherRepository implements AiTeacherRepository {
   Future<DailyPlanResponse> createDailyPlan({
     required DateTime date,
     List<IncompletePlan> carryOver = const [],
+    StudentCondition? condition,
   }) async {
     await _simulateLatency();
     final key = _dateKey(date);
@@ -58,6 +67,7 @@ class MockAiTeacherRepository implements AiTeacherRepository {
       dataset: _dataset,
       date: date,
       carryOverOverride: carryOver.isEmpty ? null : carryOver,
+      condition: condition,
     );
     _plansByDate[key] = response;
     return response;

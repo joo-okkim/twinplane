@@ -1,3 +1,4 @@
+import '../models/allowance_policy.dart';
 import '../models/daily_plan_response.dart';
 import '../models/daily_review_response.dart';
 import '../models/exam_info.dart';
@@ -5,6 +6,7 @@ import '../models/incomplete_plan.dart';
 import '../models/modification_request.dart';
 import '../models/modification_result.dart';
 import '../models/daily_review_request.dart';
+import '../models/sticker_policy.dart';
 import '../models/student_profile.dart';
 
 /// Contract for the AI Teacher backend. [MockAiTeacherRepository] is the only
@@ -28,9 +30,16 @@ abstract class AiTeacherRepository {
   /// Spec's subjectLevels[], for the home dashboard's weakest-subject insight.
   List<SubjectLevel> get subjectLevels;
 
+  /// Spec's stickerPolicy, for the reward tab's transparency panel.
+  StickerPolicy get stickerPolicy;
+
+  /// Spec's allowancePolicy, for the reward tab's allowance-candidate ladder.
+  AllowancePolicy get allowancePolicy;
+
   Future<DailyPlanResponse> createDailyPlan({
     required DateTime date,
     List<IncompletePlan> carryOver,
+    StudentCondition? condition,
   });
 
   Future<ModificationResult> requestModification(ModificationRequest request);

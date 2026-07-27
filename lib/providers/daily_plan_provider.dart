@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
 
+import '../models/allowance_policy.dart';
 import '../models/daily_plan_response.dart';
 import '../models/exam_info.dart';
 import '../models/modification_request.dart';
 import '../models/modification_result.dart';
+import '../models/sticker_policy.dart';
 import '../models/student_profile.dart';
 import '../services/ai_teacher_repository.dart';
 
@@ -17,6 +19,7 @@ class DailyPlanProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _error;
   ModificationResult? _lastModificationResult;
+  StudentCondition? _selectedCondition;
 
   DailyPlanResponse? get plan => _plan;
   DateTime get selectedDate => _selectedDate;
@@ -28,14 +31,18 @@ class DailyPlanProvider extends ChangeNotifier {
   double get weeklyAchievementRate => _repository.weeklyAchievementRate;
   List<ExamInfo> get exams => _repository.exams;
   List<SubjectLevel> get subjectLevels => _repository.subjectLevels;
+  StickerPolicy get stickerPolicy => _repository.stickerPolicy;
+  AllowancePolicy get allowancePolicy => _repository.allowancePolicy;
+  StudentCondition? get selectedCondition => _selectedCondition;
 
-  Future<void> loadPlanFor(DateTime date) async {
+  Future<void> loadPlanFor(DateTime date, {StudentCondition? condition}) async {
     _selectedDate = date;
+    if (condition != null) _selectedCondition = condition;
     _isLoading = true;
     _error = null;
     notifyListeners();
     try {
-      _plan = await _repository.createDailyPlan(date: date);
+      _plan = await _repository.createDailyPlan(date: date, condition: _selectedCondition);
     } catch (e) {
       _error = '오늘의 학습 플랜을 불러오지 못했어요.';
     } finally {

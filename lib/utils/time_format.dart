@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/plan_item.dart';
+import '../models/student_profile.dart';
 import '../theme/app_colors.dart';
 
 String formatDuration(int minutes) => '$minutes분';
@@ -77,3 +78,35 @@ BadgeStyle planTypeBadgeStyle(PlanType type) => switch (type) {
   }
   return (Icons.edit_note_outlined, AppColors.grayBg, AppColors.gray);
 }
+
+/// The 5 condition options offered by the home screen's check-in card,
+/// matching spec section 6's condition values (veryTired/stressed are
+/// still supported by the generation logic, just not offered as a quick
+/// pick here to keep the picker simple).
+const conditionPickerOptions = [
+  StudentCondition.veryGood,
+  StudentCondition.good,
+  StudentCondition.normal,
+  StudentCondition.tired,
+  StudentCondition.sick,
+];
+
+String conditionLabel(StudentCondition condition) => switch (condition) {
+      StudentCondition.veryGood => '최고예요',
+      StudentCondition.good => '좋아요',
+      StudentCondition.normal => '보통이에요',
+      StudentCondition.tired => '피곤해요',
+      StudentCondition.veryTired => '많이 피곤해요',
+      StudentCondition.stressed => '마음이 힘들어요',
+      StudentCondition.sick => '아파요',
+    };
+
+IconData conditionIcon(StudentCondition condition) => switch (condition) {
+      StudentCondition.veryGood => Icons.sentiment_very_satisfied_rounded,
+      StudentCondition.good => Icons.sentiment_satisfied_rounded,
+      StudentCondition.normal => Icons.sentiment_neutral_rounded,
+      StudentCondition.tired => Icons.sentiment_dissatisfied_rounded,
+      StudentCondition.veryTired => Icons.sentiment_very_dissatisfied_rounded,
+      StudentCondition.stressed => Icons.mood_bad_rounded,
+      StudentCondition.sick => Icons.sick_rounded,
+    };
