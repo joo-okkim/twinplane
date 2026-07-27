@@ -28,6 +28,15 @@ class ModificationResult {
     required this.reason,
   });
 
+  factory ModificationResult.fromJson(Map<String, dynamic> json) => ModificationResult(
+        status: ModificationStatus.fromWire(json['modificationStatus'] as String),
+        updatedItem: json['updatedItem'] == null
+            ? null
+            : PlanItem.fromJson(json['updatedItem'] as Map<String, dynamic>),
+        message: json['message'] as String,
+        reason: json['reason'] as String,
+      );
+
   Map<String, dynamic> toJson() => {
         'modificationStatus': status.wireValue,
         'updatedItem': updatedItem?.toJson(),

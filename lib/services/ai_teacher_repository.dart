@@ -10,11 +10,21 @@ import '../models/parent_settings.dart';
 import '../models/sticker_policy.dart';
 import '../models/student_profile.dart';
 
-/// Contract for the AI Teacher backend. [MockAiTeacherRepository] is the only
-/// implementation today; a future HttpAiTeacherRepository can implement this
-/// same interface to call the real Node server without touching providers or
-/// screens.
+/// Contract for the AI Teacher backend. See docs/API_CONTRACT.md for the
+/// REST endpoint each method/getter maps to once a real server exists.
+/// [MockAiTeacherRepository] is the implementation used today;
+/// [HttpAiTeacherRepository] (lib/services/http/) implements this same
+/// interface against the real Node API without touching providers or
+/// screens -- only `main.dart`'s repository choice changes.
 abstract class AiTeacherRepository {
+  /// Must be awaited once before any other member is read. The mock
+  /// implementation is a no-op; the HTTP implementation uses this to fetch
+  /// and cache the student's profile/policies (GET /api/student/*,
+  /// GET /api/policy/*) so the synchronous getters below have data to
+  /// return. Providers call this during app startup, before the first
+  /// screen builds.
+  Future<void> initialize();
+
   /// Display name for the greeting header. A real backend would return this
   /// as part of the authenticated student's profile.
   String get studentName;

@@ -33,6 +33,9 @@ class MockAiTeacherRepository implements AiTeacherRepository {
   final Random _random = Random();
 
   @override
+  Future<void> initialize() async {}
+
+  @override
   String get studentName => _dataset.student.name;
 
   @override

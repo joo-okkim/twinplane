@@ -115,6 +115,7 @@ class PlanItem {
       );
 
   Map<String, dynamic> toJson() => {
+        'id': id,
         'sequence': sequence,
         'planType': planType.wireValue,
         'subject': subject,

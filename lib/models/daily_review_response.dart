@@ -17,6 +17,16 @@ class AchievementStats {
     required this.totalActualMinutes,
   });
 
+  factory AchievementStats.fromJson(Map<String, dynamic> json) => AchievementStats(
+        totalPlanCount: json['totalPlanCount'] as int,
+        completedPlanCount: json['completedPlanCount'] as int,
+        overallAchievementRate: json['overallAchievementRate'] as int,
+        requiredAchievementRate: json['requiredAchievementRate'] as int,
+        onTimeCompletionRate: json['onTimeCompletionRate'] as int,
+        totalPlannedMinutes: json['totalPlannedMinutes'] as int,
+        totalActualMinutes: json['totalActualMinutes'] as int,
+      );
+
   Map<String, dynamic> toJson() => {
         'totalPlanCount': totalPlanCount,
         'completedPlanCount': completedPlanCount,
@@ -42,6 +52,14 @@ class SubjectResult {
     required this.achievementRate,
     required this.analysis,
   });
+
+  factory SubjectResult.fromJson(Map<String, dynamic> json) => SubjectResult(
+        subject: json['subject'] as String,
+        plannedMinutes: json['plannedMinutes'] as int,
+        actualMinutes: json['actualMinutes'] as int,
+        achievementRate: json['achievementRate'] as int,
+        analysis: json['analysis'] as String,
+      );
 
   Map<String, dynamic> toJson() => {
         'subject': subject,
@@ -73,6 +91,16 @@ class RewardResult {
     this.currency = 'KRW',
     this.parentApprovalRequired = true,
   });
+
+  factory RewardResult.fromJson(Map<String, dynamic> json) => RewardResult(
+        earnedStickerCount: json['earnedStickerCount'] as int,
+        dailyBonusApplied: json['dailyBonusApplied'] as bool,
+        weeklyAchievementRate: (json['weeklyAchievementRate'] as num).toDouble(),
+        allowanceCandidate: json['allowanceCandidate'] as bool,
+        expectedAllowance: json['expectedAllowance'] as int?,
+        currency: json['currency'] as String? ?? 'KRW',
+        parentApprovalRequired: json['parentApprovalRequired'] as bool? ?? true,
+      );
 
   Map<String, dynamic> toJson() => {
         'earnedStickerCount': earnedStickerCount,
@@ -109,6 +137,21 @@ class DailyReviewResponse {
     required this.parentMessage,
     required this.rewardResult,
   });
+
+  factory DailyReviewResponse.fromJson(Map<String, dynamic> json) => DailyReviewResponse(
+        result: json['result'] as String,
+        studentId: json['studentId'] as int,
+        reviewDate: json['reviewDate'] as String,
+        achievement: AchievementStats.fromJson(json['achievement'] as Map<String, dynamic>),
+        subjectResults: (json['subjectResults'] as List)
+            .map((e) => SubjectResult.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        completedWell: (json['completedWell'] as List).map((e) => e as String).toList(),
+        improvementPoints: (json['improvementPoints'] as List).map((e) => e as String).toList(),
+        studentMessage: json['studentMessage'] as String,
+        parentMessage: json['parentMessage'] as String,
+        rewardResult: RewardResult.fromJson(json['rewardResult'] as Map<String, dynamic>),
+      );
 
   Map<String, dynamic> toJson() => {
         'result': result,
