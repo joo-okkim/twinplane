@@ -3,7 +3,9 @@ import 'dart:math';
 import '../../models/daily_plan_response.dart';
 import '../../models/daily_review_request.dart';
 import '../../models/daily_review_response.dart';
+import '../../models/exam_info.dart';
 import '../../models/incomplete_plan.dart';
+import '../../models/student_profile.dart';
 import '../../models/modification_request.dart';
 import '../../models/modification_result.dart';
 import '../../models/student_dataset.dart';
@@ -32,6 +34,15 @@ class MockAiTeacherRepository implements AiTeacherRepository {
 
   @override
   int get streakDays => _dataset.recentPerformance.consecutiveCompletionDays;
+
+  @override
+  double get weeklyAchievementRate => _dataset.recentPerformance.weeklyAchievementRate;
+
+  @override
+  List<ExamInfo> get exams => _dataset.exams;
+
+  @override
+  List<SubjectLevel> get subjectLevels => _dataset.subjectLevels;
 
   Future<void> _simulateLatency() =>
       Future.delayed(Duration(milliseconds: 400 + _random.nextInt(400)));

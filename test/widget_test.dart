@@ -8,10 +8,19 @@ void main() {
     await initializeDateFormatting('ko_KR', null);
   });
 
-  testWidgets('Today plan screen loads the mock daily plan', (WidgetTester tester) async {
+  testWidgets('Home tab shows the AI hero card and progress dashboard', (WidgetTester tester) async {
     await tester.pumpWidget(const TwinplaneRoot());
+    await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    // Wait for the mock repository's simulated network latency to resolve.
+    expect(find.text('오늘 계획 시작하기'), findsOneWidget);
+    expect(find.text('오늘의 진행률'), findsOneWidget);
+  });
+
+  testWidgets('Plan tab loads the mock daily plan', (WidgetTester tester) async {
+    await tester.pumpWidget(const TwinplaneRoot());
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.tap(find.text('학습'));
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(find.text('오늘의 AI 학습 플랜'), findsOneWidget);

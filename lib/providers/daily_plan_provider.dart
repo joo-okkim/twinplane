@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 
 import '../models/daily_plan_response.dart';
+import '../models/exam_info.dart';
 import '../models/modification_request.dart';
 import '../models/modification_result.dart';
+import '../models/student_profile.dart';
 import '../services/ai_teacher_repository.dart';
 
 class DailyPlanProvider extends ChangeNotifier {
@@ -23,6 +25,9 @@ class DailyPlanProvider extends ChangeNotifier {
   ModificationResult? get lastModificationResult => _lastModificationResult;
   String get studentName => _repository.studentName;
   int get streakDays => _repository.streakDays;
+  double get weeklyAchievementRate => _repository.weeklyAchievementRate;
+  List<ExamInfo> get exams => _repository.exams;
+  List<SubjectLevel> get subjectLevels => _repository.subjectLevels;
 
   Future<void> loadPlanFor(DateTime date) async {
     _selectedDate = date;
