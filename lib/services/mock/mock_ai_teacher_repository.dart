@@ -6,6 +6,7 @@ import '../../models/daily_review_request.dart';
 import '../../models/daily_review_response.dart';
 import '../../models/exam_info.dart';
 import '../../models/incomplete_plan.dart';
+import '../../models/parent_settings.dart';
 import '../../models/sticker_policy.dart';
 import '../../models/student_profile.dart';
 import '../../models/modification_request.dart';
@@ -51,6 +52,12 @@ class MockAiTeacherRepository implements AiTeacherRepository {
 
   @override
   AllowancePolicy get allowancePolicy => _dataset.allowancePolicy;
+
+  @override
+  StudentProfile get studentProfile => _dataset.student;
+
+  @override
+  ParentSettings get parentSettings => _dataset.parentSettings;
 
   Future<void> _simulateLatency() =>
       Future.delayed(Duration(milliseconds: 400 + _random.nextInt(400)));

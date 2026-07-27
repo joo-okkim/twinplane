@@ -5,6 +5,7 @@ import '../models/daily_plan_response.dart';
 import '../models/exam_info.dart';
 import '../models/modification_request.dart';
 import '../models/modification_result.dart';
+import '../models/parent_settings.dart';
 import '../models/sticker_policy.dart';
 import '../models/student_profile.dart';
 import '../services/ai_teacher_repository.dart';
@@ -34,6 +35,8 @@ class DailyPlanProvider extends ChangeNotifier {
   StickerPolicy get stickerPolicy => _repository.stickerPolicy;
   AllowancePolicy get allowancePolicy => _repository.allowancePolicy;
   StudentCondition? get selectedCondition => _selectedCondition;
+  StudentProfile get studentProfile => _repository.studentProfile;
+  ParentSettings get parentSettings => _repository.parentSettings;
 
   Future<void> loadPlanFor(DateTime date, {StudentCondition? condition}) async {
     _selectedDate = date;

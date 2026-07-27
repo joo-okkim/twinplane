@@ -6,6 +6,7 @@ import '../models/incomplete_plan.dart';
 import '../models/modification_request.dart';
 import '../models/modification_result.dart';
 import '../models/daily_review_request.dart';
+import '../models/parent_settings.dart';
 import '../models/sticker_policy.dart';
 import '../models/student_profile.dart';
 
@@ -35,6 +36,12 @@ abstract class AiTeacherRepository {
 
   /// Spec's allowancePolicy, for the reward tab's allowance-candidate ladder.
   AllowancePolicy get allowancePolicy;
+
+  /// Spec's student profile, for the 마이(My) tab's profile card.
+  StudentProfile get studentProfile;
+
+  /// Spec's parentSettings, for the 마이(My) tab's read-only settings panel.
+  ParentSettings get parentSettings;
 
   Future<DailyPlanResponse> createDailyPlan({
     required DateTime date,
