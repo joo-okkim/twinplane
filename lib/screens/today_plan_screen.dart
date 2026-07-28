@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/daily_plan_response.dart';
 import '../models/plan_item.dart';
 import '../providers/daily_plan_provider.dart';
 import '../providers/daily_review_provider.dart';
@@ -115,6 +116,10 @@ class _TodayPlanScreenState extends State<TodayPlanScreen> {
                           message: plan.studentMessage.message,
                           tone: plan.studentMessage.tone,
                         ),
+                        if (plan.parentMessage.approvalRequired) ...[
+                          const SizedBox(height: 12),
+                          _ParentAttentionBanner(parentMessage: plan.parentMessage),
+                        ],
                         const SizedBox(height: 12),
                         PlanSummaryHeader(
                           summary: plan.planSummary,
@@ -205,6 +210,47 @@ class _TodayPlanScreenState extends State<TodayPlanScreen> {
             },
           );
         },
+      ),
+    );
+  }
+}
+
+/// Surfaces `parentMessage` when the backend flags today's plan as needing
+/// parent sign-off (spec §6: very_tired/sick condition forces a
+/// required-only day) -- otherwise this data was generated but never shown.
+class _ParentAttentionBanner extends StatelessWidget {
+  const _ParentAttentionBanner({required this.parentMessage});
+
+  final ParentMessage parentMessage;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.coralBg,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFFF3C6C1)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.notifications_active_outlined, size: 18, color: AppColors.coral),
+              const SizedBox(width: 6),
+              const Text('보호자 확인이 필요해요',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.coral)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(parentMessage.summary, style: const TextStyle(fontSize: 12.5, color: Colors.black54, height: 1.4)),
+          for (final item in parentMessage.attentionItems) ...[
+            const SizedBox(height: 4),
+            Text('· $item', style: const TextStyle(fontSize: 12.5, color: Colors.black54, height: 1.4)),
+          ],
+        ],
       ),
     );
   }
