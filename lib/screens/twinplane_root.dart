@@ -18,15 +18,21 @@ import 'main_shell.dart';
 /// anything inserted into the Overlay (showModalBottomSheet, showDialog --
 /// e.g. the plan-modification sheet) can't find them via context.read.
 class TwinplaneRoot extends StatelessWidget {
-  const TwinplaneRoot({super.key, required this.repository});
+  const TwinplaneRoot({super.key, required this.repository, this.onLogout});
 
   final AiTeacherRepository repository;
+
+  /// Null in mock mode (no real session to log out of) or when this widget
+  /// is pumped directly by a test. The 마이 tab reads this via
+  /// `Provider.of<VoidCallback?>` to wire up its logout row.
+  final VoidCallback? onLogout;
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         Provider<AiTeacherRepository>.value(value: repository),
+        Provider<VoidCallback?>.value(value: onLogout),
         ChangeNotifierProvider<DailyPlanProvider>(
           create: (context) => DailyPlanProvider(context.read<AiTeacherRepository>()),
         ),

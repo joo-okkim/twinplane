@@ -98,6 +98,18 @@ class _AuthGateState extends State<AuthGate> {
     await _initializeWithToken(result.token);
   }
 
+  /// Clears the saved token and returns to the login screen. Only wired up
+  /// (non-null) when a real login actually happened -- mock mode has no
+  /// session to log out of.
+  Future<void> _logout() async {
+    await TokenStorage.clear();
+    if (!mounted) return;
+    setState(() {
+      _repository = null;
+      _state = _AuthState.needsLogin;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     switch (_state) {
@@ -110,7 +122,10 @@ class _AuthGateState extends State<AuthGate> {
           home: _StartupErrorScreen(message: _errorMessage ?? '알 수 없는 오류가 발생했어요.', onRetry: _start),
         );
       case _AuthState.ready:
-        return TwinplaneRoot(repository: _repository!);
+        return TwinplaneRoot(
+          repository: _repository!,
+          onLogout: AppConfig.useMockBackend ? null : _logout,
+        );
     }
   }
 }

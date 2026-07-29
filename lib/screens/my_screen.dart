@@ -41,7 +41,7 @@ class MyScreen extends StatelessWidget {
               const SizedBox(height: 14),
               _ParentSettingsCard(settings: parentSettings),
               const SizedBox(height: 14),
-              const _AppInfoCard(),
+              _AppInfoCard(onLogout: context.watch<VoidCallback?>()),
             ],
           );
         },
@@ -231,7 +231,10 @@ class _ParentSettingsCard extends StatelessWidget {
 }
 
 class _AppInfoCard extends StatelessWidget {
-  const _AppInfoCard();
+  const _AppInfoCard({required this.onLogout});
+
+  /// Null in mock mode -- there's no real session to log out of there.
+  final VoidCallback? onLogout;
 
   @override
   Widget build(BuildContext context) {
@@ -246,14 +249,16 @@ class _AppInfoCard extends StatelessWidget {
           const ListTile(
             leading: Icon(Icons.info_outline, color: AppColors.gray),
             title: Text('앱 버전', style: TextStyle(fontSize: 13.5)),
-            trailing: Text('1.0.0 (Mock)', style: TextStyle(fontSize: 13, color: AppColors.gray)),
+            trailing: Text('1.0.0', style: TextStyle(fontSize: 13, color: AppColors.gray)),
           ),
-          const Divider(height: 1),
-          ListTile(
-            leading: const Icon(Icons.logout, color: AppColors.gray),
-            title: const Text('로그아웃', style: TextStyle(fontSize: 13.5)),
-            onTap: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('준비 중이에요.'))),
-          ),
+          if (onLogout != null) ...[
+            const Divider(height: 1),
+            ListTile(
+              leading: const Icon(Icons.logout, color: AppColors.gray),
+              title: const Text('로그아웃', style: TextStyle(fontSize: 13.5)),
+              onTap: onLogout,
+            ),
+          ],
         ],
       ),
     );

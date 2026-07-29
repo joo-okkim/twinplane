@@ -59,4 +59,42 @@ void main() {
     expect(find.text('어떤 점이 힘든가요?'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('My tab hides the logout row when there is no session to log out of (mock mode)', (
+    WidgetTester tester,
+  ) async {
+    tester.view.physicalSize = const Size(1080, 3000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(TwinplaneRoot(repository: MockAiTeacherRepository()));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.tap(find.text('마이'));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    expect(find.text('로그아웃'), findsNothing);
+  });
+
+  testWidgets('My tab shows a working logout row when a real session exists', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1080, 3000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    var loggedOut = false;
+    await tester.pumpWidget(
+      TwinplaneRoot(repository: MockAiTeacherRepository(), onLogout: () => loggedOut = true),
+    );
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.tap(find.text('마이'));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    expect(find.text('로그아웃'), findsOneWidget);
+    await tester.tap(find.text('로그아웃'));
+
+    expect(loggedOut, isTrue);
+  });
 }
