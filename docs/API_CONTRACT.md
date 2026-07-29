@@ -21,9 +21,11 @@ were generated directly from the real Dart models, not hand-typed — see
 
 - Base URL: configurable, no fixed path prefix assumed beyond what's shown per endpoint.
 - Dates: `YYYY-MM-DD` strings. Times: `HH:mm` 24h strings.
-- Auth: out of scope for this iteration (single hardcoded student). Add a
-  bearer token / session header here once auth exists — `HttpAiTeacherRepository`
-  is the one place that would need to attach it.
+- Auth: every endpoint below except `POST /api/auth/login` requires
+  `Authorization: Bearer <token>`. Missing/invalid/expired token → `401
+  { "error": "..." }`. `HttpAiTeacherRepository` attaches this header on
+  every request; there's no self-serve registration yet, only the 3 demo
+  accounts created by the backend's `scripts/seed.js`.
 - Errors: any non-2xx should return `{ "error": "message" }`; the Flutter
   client currently surfaces the raw status + body on failure (see
   `ApiException` in `http_ai_teacher_repository.dart`) — a structured error
@@ -33,6 +35,25 @@ were generated directly from the real Dart models, not hand-typed — see
   authoritative list.
 
 ## Endpoints
+
+### `POST /api/auth/login`
+
+Not authenticated (this is how a token is obtained). Every other endpoint
+requires the returned token on `Authorization: Bearer <token>`.
+
+**Request**
+
+```json
+{ "username": "jiyoon", "password": "5447" }
+```
+
+**Response** — `200`
+
+```json
+{ "token": "<jwt>", "studentId": 1, "name": "지윤" }
+```
+
+`401 { "error": "invalid credentials" }` on a bad username/password.
 
 ### `GET /api/student/profile`
 

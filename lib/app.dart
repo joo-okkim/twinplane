@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'screens/main_shell.dart';
+import 'screens/auth_gate.dart';
 import 'theme/app_colors.dart';
 
 class TwinplaneApp extends StatelessWidget {
@@ -24,7 +24,7 @@ class TwinplaneApp extends StatelessWidget {
         scaffoldBackgroundColor: AppColors.background,
         fontFamily: 'NotoSansKR',
       ),
-      home: const MainShell(),
+      home: const AuthGate(),
     );
   }
 }

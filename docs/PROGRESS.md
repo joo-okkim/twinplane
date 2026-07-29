@@ -35,13 +35,29 @@ what's mocked, and what's blocked.
 | 보상 (Reward) tab | Done | Sticker tally, allowance ladder, policy transparency panel |
 | 마이 (My) tab | Done | Read-only student profile + parent settings |
 | AI 코치 quick actions | Done | Bottom-sheet wired to real modification/regenerate/reasons calls (not a chat backend) |
-| HTTP client scaffold | Done | `HttpAiTeacherRepository`, `AppConfig`, startup error screen — untested against a real server since none exists yet |
+| HTTP client scaffold | Done | `HttpAiTeacherRepository`, `AppConfig`, startup error screen — verified end-to-end against the deployed backend |
+| Login / auth gate | Done | `LoginScreen` + `AuthGate` (`lib/screens/`); token persisted via `shared_preferences`; mock mode bypasses login entirely |
+
+## Backend status (as of the DB + auth migration)
+
+- Real Postgres persistence + username/password login are live on the
+  deployed backend (`twinplane-backend`, see its README/`db/schema.sql`).
+  `MockAiTeacherRepository` is unaffected (`USE_MOCK=true`, the default,
+  still skips login entirely).
+- 3 demo accounts seeded via the backend's `scripts/seed.js`: `jiyoon`
+  (지윤, the original mock student), `jiho` (김지호), `jia` (김지아) — all
+  password `5447`. No self-serve registration yet.
+- `AuthGate`/`LoginScreen` (`lib/screens/`) gate the real-HTTP path; mock
+  mode is unaffected.
 
 ## Explicitly out of scope so far
 
-- **Auth** — single hardcoded student, no login/session.
-- **Persistence across days** — the mock repository is in-memory per
-  session; a real backend needs actual storage for plans/reviews/history.
+- **Self-serve registration** — new accounts are created via the backend's
+  `scripts/seed.js` only, no sign-up screen/endpoint.
+- **AI-generated/graded assessments** — registering a homework/exam
+  "scope" and having the AI generate + grade practice problems for it was
+  discussed and deferred; `assignments`/`exams` already reserve a `scope`
+  column for it.
 - **AI chat** — the "AI 코치" floating button opens a fixed quick-action
   sheet, not a freeform LLM chat.
 - **OCR homework capture** — not built.

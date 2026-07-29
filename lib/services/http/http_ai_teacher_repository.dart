@@ -20,14 +20,19 @@ import '../ai_teacher_repository.dart';
 /// shapes here MUST match docs/API_CONTRACT.md -- that file is the source of
 /// truth shared with the backend team; update both together.
 ///
-/// [initialize] fetches and caches the student's profile and policies once
-/// (they rarely change within a session); [createDailyPlan] /
-/// [requestModification] / [submitDailyReview] hit the server on every call
-/// since their results depend on that day's state.
+/// Every request carries `Authorization: Bearer $token` -- [token] is
+/// obtained via a separate login step (see `lib/services/auth/`) before
+/// this repository is constructed. [initialize] fetches and caches the
+/// student's profile and policies once (they rarely change within a
+/// session); [createDailyPlan] / [requestModification] / [submitDailyReview]
+/// hit the server on every call since their results depend on that day's
+/// state.
 class HttpAiTeacherRepository implements AiTeacherRepository {
-  HttpAiTeacherRepository({required this.baseUrl, http.Client? client}) : _client = client ?? http.Client();
+  HttpAiTeacherRepository({required this.baseUrl, required this.token, http.Client? client})
+    : _client = client ?? http.Client();
 
   final String baseUrl;
+  final String token;
   final http.Client _client;
 
   StudentProfile? _studentProfile;
@@ -40,16 +45,18 @@ class HttpAiTeacherRepository implements AiTeacherRepository {
 
   Uri _uri(String path) => Uri.parse('$baseUrl$path');
 
+  Map<String, String> get _headers => {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'};
+
   Map<String, dynamic> _decodeObject(http.Response response, String path) {
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw ApiException('GET $path failed with ${response.statusCode}: ${response.body}');
+      throw ApiException('GET $path failed with ${response.statusCode}: ${response.body}', statusCode: response.statusCode);
     }
     return jsonDecode(response.body) as Map<String, dynamic>;
   }
 
   List<dynamic> _decodeArray(http.Response response, String path) {
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw ApiException('GET $path failed with ${response.statusCode}: ${response.body}');
+      throw ApiException('GET $path failed with ${response.statusCode}: ${response.body}', statusCode: response.statusCode);
     }
     return jsonDecode(response.body) as List<dynamic>;
   }
@@ -57,13 +64,13 @@ class HttpAiTeacherRepository implements AiTeacherRepository {
   @override
   Future<void> initialize() async {
     final results = await Future.wait([
-      _client.get(_uri('/api/student/profile')),
-      _client.get(_uri('/api/student/subject-levels')),
-      _client.get(_uri('/api/student/exams')),
-      _client.get(_uri('/api/student/performance')),
-      _client.get(_uri('/api/parent/settings')),
-      _client.get(_uri('/api/policy/sticker')),
-      _client.get(_uri('/api/policy/allowance')),
+      _client.get(_uri('/api/student/profile'), headers: _headers),
+      _client.get(_uri('/api/student/subject-levels'), headers: _headers),
+      _client.get(_uri('/api/student/exams'), headers: _headers),
+      _client.get(_uri('/api/student/performance'), headers: _headers),
+      _client.get(_uri('/api/parent/settings'), headers: _headers),
+      _client.get(_uri('/api/policy/sticker'), headers: _headers),
+      _client.get(_uri('/api/policy/allowance'), headers: _headers),
     ]);
 
     _studentProfile = StudentProfile.fromJson(_decodeObject(results[0], '/api/student/profile'));
@@ -124,7 +131,7 @@ class HttpAiTeacherRepository implements AiTeacherRepository {
   }) async {
     final response = await _client.post(
       _uri('/api/plans/daily'),
-      headers: const {'Content-Type': 'application/json'},
+      headers: _headers,
       body: jsonEncode({
         'date': _dateStr(date),
         if (condition != null) 'condition': condition.wireValue,
@@ -135,11 +142,7 @@ class HttpAiTeacherRepository implements AiTeacherRepository {
 
   @override
   Future<ModificationResult> requestModification(ModificationRequest request) async {
-    final response = await _client.post(
-      _uri('/api/plans/modify'),
-      headers: const {'Content-Type': 'application/json'},
-      body: jsonEncode(request.toJson()),
-    );
+    final response = await _client.post(_uri('/api/plans/modify'), headers: _headers, body: jsonEncode(request.toJson()));
     return ModificationResult.fromJson(_decodeObject(response, '/api/plans/modify'));
   }
 
@@ -150,7 +153,7 @@ class HttpAiTeacherRepository implements AiTeacherRepository {
   }) async {
     final response = await _client.post(
       _uri('/api/reviews/daily'),
-      headers: const {'Content-Type': 'application/json'},
+      headers: _headers,
       body: jsonEncode({
         'date': _dateStr(date),
         'completions': completions.map((c) => c.toJson()).toList(),
@@ -161,8 +164,9 @@ class HttpAiTeacherRepository implements AiTeacherRepository {
 }
 
 class ApiException implements Exception {
-  ApiException(this.message);
+  ApiException(this.message, {this.statusCode});
   final String message;
+  final int? statusCode;
 
   @override
   String toString() => 'ApiException: $message';
