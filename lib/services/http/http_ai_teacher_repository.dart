@@ -3,6 +3,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../../models/allowance_policy.dart';
+import '../../models/assessment_generate_request.dart';
+import '../../models/assessment_generate_response.dart';
+import '../../models/assessment_submit_request.dart';
+import '../../models/assessment_submit_response.dart';
 import '../../models/daily_plan_response.dart';
 import '../../models/daily_review_request.dart';
 import '../../models/daily_review_response.dart';
@@ -160,6 +164,23 @@ class HttpAiTeacherRepository implements AiTeacherRepository {
       }),
     );
     return DailyReviewResponse.fromJson(_decodeObject(response, '/api/reviews/daily'));
+  }
+
+  @override
+  Future<AssessmentGenerateResponse> generateAssessment(AssessmentGenerateRequest request) async {
+    final response = await _client.post(
+      _uri('/api/assessments/generate'),
+      headers: _headers,
+      body: jsonEncode(request.toJson()),
+    );
+    return AssessmentGenerateResponse.fromJson(_decodeObject(response, '/api/assessments/generate'));
+  }
+
+  @override
+  Future<AssessmentSubmitResponse> submitAssessment(AssessmentSubmitRequest request) async {
+    final path = '/api/assessments/${request.assessmentId}/submit';
+    final response = await _client.post(_uri(path), headers: _headers, body: jsonEncode(request.toJson()));
+    return AssessmentSubmitResponse.fromJson(_decodeObject(response, path));
   }
 }
 

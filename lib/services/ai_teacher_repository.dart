@@ -1,4 +1,8 @@
 import '../models/allowance_policy.dart';
+import '../models/assessment_generate_request.dart';
+import '../models/assessment_generate_response.dart';
+import '../models/assessment_submit_request.dart';
+import '../models/assessment_submit_response.dart';
 import '../models/daily_plan_response.dart';
 import '../models/daily_review_response.dart';
 import '../models/exam_info.dart';
@@ -65,4 +69,11 @@ abstract class AiTeacherRepository {
     required DateTime date,
     required List<PlanItemCompletion> completions,
   });
+
+  /// Generates a 이해도 확인 (comprehension check) quiz for a completed,
+  /// evidence-required plan item. See POST /api/assessments/generate.
+  Future<AssessmentGenerateResponse> generateAssessment(AssessmentGenerateRequest request);
+
+  /// Submits answers for grading. See POST /api/assessments/{id}/submit.
+  Future<AssessmentSubmitResponse> submitAssessment(AssessmentSubmitRequest request);
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../app.dart';
+import '../providers/assessment_provider.dart';
 import '../providers/daily_plan_provider.dart';
 import '../providers/daily_review_provider.dart';
 import '../services/ai_teacher_repository.dart';
@@ -38,6 +39,9 @@ class TwinplaneRoot extends StatelessWidget {
         ),
         ChangeNotifierProvider<DailyReviewProvider>(
           create: (context) => DailyReviewProvider(context.read<AiTeacherRepository>()),
+        ),
+        ChangeNotifierProvider<AssessmentProvider>(
+          create: (context) => AssessmentProvider(context.read<AiTeacherRepository>()),
         ),
       ],
       child: const TwinplaneApp(home: MainShell()),

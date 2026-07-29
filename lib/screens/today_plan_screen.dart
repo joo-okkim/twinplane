@@ -12,6 +12,7 @@ import '../widgets/message_banner.dart';
 import '../widgets/modify_request_sheet.dart';
 import '../widgets/plan_item_tile.dart';
 import '../widgets/plan_summary_header.dart';
+import 'assessment_screen.dart';
 import 'daily_review_screen.dart';
 
 class TodayPlanScreen extends StatefulWidget {
@@ -140,6 +141,12 @@ class _TodayPlanScreenState extends State<TodayPlanScreen> {
                             onRequestModify: plan.dailyPlans[i].adjustable
                                 ? () => showModifyRequestSheet(context, planItemId: plan.dailyPlans[i].id)
                                 : null,
+                            onRequestAssessment:
+                                (reviewProvider.isCompleted(plan.dailyPlans[i].id) && plan.dailyPlans[i].evidenceRequired)
+                                    ? () => Navigator.of(context).push(
+                                          MaterialPageRoute(builder: (_) => AssessmentScreen(planItemId: plan.dailyPlans[i].id)),
+                                        )
+                                    : null,
                           ),
                         const SizedBox(height: 4),
                         GenerationReasonsPanel(reasons: plan.generationReasons),

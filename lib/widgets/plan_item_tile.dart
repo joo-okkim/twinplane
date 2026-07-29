@@ -14,6 +14,7 @@ class PlanItemTile extends StatelessWidget {
     this.isActive = false,
     this.onToggle,
     this.onRequestModify,
+    this.onRequestAssessment,
   });
 
   final PlanItem item;
@@ -23,6 +24,7 @@ class PlanItemTile extends StatelessWidget {
   final bool isActive;
   final VoidCallback? onToggle;
   final VoidCallback? onRequestModify;
+  final VoidCallback? onRequestAssessment;
 
   bool get _isTrackable => item.rewardEligible;
 
@@ -152,6 +154,25 @@ class PlanItemTile extends StatelessWidget {
                               _durationPill(item.durationMinutes),
                             ],
                           ),
+                          if (completed && item.evidenceRequired) ...[
+                            const SizedBox(height: 8),
+                            InkWell(
+                              borderRadius: BorderRadius.circular(20),
+                              onTap: onRequestAssessment,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(color: AppColors.tealBg, borderRadius: BorderRadius.circular(20)),
+                                child: const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.quiz_outlined, size: 14, color: AppColors.teal),
+                                    SizedBox(width: 4),
+                                    Text('이해도 확인', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.teal)),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ),
