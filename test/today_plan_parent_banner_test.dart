@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -42,9 +41,7 @@ void main() {
 
   testWidgets('parent-attention banner is hidden for a normal condition', (WidgetTester tester) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: TwinplaneRoot(repository: MockAiTeacherRepository(dataset: _datasetWithCondition(StudentCondition.normal))),
-      ),
+      TwinplaneRoot(repository: MockAiTeacherRepository(dataset: _datasetWithCondition(StudentCondition.normal))),
     );
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
@@ -58,9 +55,7 @@ void main() {
     WidgetTester tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: TwinplaneRoot(repository: MockAiTeacherRepository(dataset: _datasetWithCondition(StudentCondition.sick))),
-      ),
+      TwinplaneRoot(repository: MockAiTeacherRepository(dataset: _datasetWithCondition(StudentCondition.sick))),
     );
     await tester.pumpAndSettle(const Duration(seconds: 1));
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../app.dart';
 import '../config/app_config.dart';
 import '../services/ai_teacher_repository.dart';
 import '../services/auth/auth_client.dart';
@@ -18,6 +19,14 @@ enum _AuthState { loading, needsLogin, error, ready }
 /// - USE_MOCK=false: try a saved token first; show [LoginScreen] if none
 ///   or if it's rejected (401); show a themed retry screen for any other
 ///   startup failure (server unreachable, etc).
+///
+/// Every non-ready state renders through [TwinplaneApp] directly (its own
+/// self-contained MaterialApp/Navigator, no providers needed yet). The
+/// ready state hands off to [TwinplaneRoot], which wraps its own
+/// [TwinplaneApp] *inside* the provider tree -- providers must be an
+/// ancestor of the Navigator/Overlay for showModalBottomSheet/showDialog to
+/// find them, so AuthGate itself must never sit between MultiProvider and
+/// MaterialApp.
 class AuthGate extends StatefulWidget {
   const AuthGate({super.key});
 
@@ -93,11 +102,13 @@ class _AuthGateState extends State<AuthGate> {
   Widget build(BuildContext context) {
     switch (_state) {
       case _AuthState.loading:
-        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+        return const TwinplaneApp(home: Scaffold(body: Center(child: CircularProgressIndicator())));
       case _AuthState.needsLogin:
-        return LoginScreen(authClient: _authClient, onLoggedIn: _onLoggedIn);
+        return TwinplaneApp(home: LoginScreen(authClient: _authClient, onLoggedIn: _onLoggedIn));
       case _AuthState.error:
-        return _StartupErrorScreen(message: _errorMessage ?? '알 수 없는 오류가 발생했어요.', onRetry: _start);
+        return TwinplaneApp(
+          home: _StartupErrorScreen(message: _errorMessage ?? '알 수 없는 오류가 발생했어요.', onRetry: _start),
+        );
       case _AuthState.ready:
         return TwinplaneRoot(repository: _repository!);
     }

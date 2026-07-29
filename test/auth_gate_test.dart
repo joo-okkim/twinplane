@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-import 'package:twinplane/app.dart';
+import 'package:twinplane/screens/auth_gate.dart';
 
 void main() {
   setUpAll(() async {
@@ -9,7 +9,7 @@ void main() {
   });
 
   testWidgets('mock mode (USE_MOCK default) skips login and shows the app directly', (WidgetTester tester) async {
-    await tester.pumpWidget(const TwinplaneApp());
+    await tester.pumpWidget(const AuthGate());
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(find.text('아이디'), findsNothing);
