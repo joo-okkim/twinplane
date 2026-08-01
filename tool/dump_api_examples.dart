@@ -4,6 +4,8 @@
 // ignore_for_file: avoid_print
 import 'dart:convert';
 
+import 'package:twinplane/models/assessment_generate_request.dart';
+import 'package:twinplane/models/assessment_submit_request.dart';
 import 'package:twinplane/models/daily_review_request.dart';
 import 'package:twinplane/models/modification_request.dart';
 import 'package:twinplane/services/mock/mock_ai_teacher_repository.dart';
@@ -61,4 +63,57 @@ Future<void> main() async {
   print('\n=== POST /api/reviews/daily (response) ===');
   final review = await repo.submitDailyReview(date: date, completions: completions);
   print(_encoder.convert(review.toJson()));
+
+  print('\n=== POST /api/assessments/generate (request) ===');
+  final evidenceItem = plan.dailyPlans.firstWhere((p) => p.evidenceRequired);
+  final generateRequest = AssessmentGenerateRequest(planItemId: evidenceItem.id);
+  print(_encoder.convert(generateRequest.toJson()));
+
+  print('\n=== POST /api/assessments/generate (response) ===');
+  final generated = await repo.generateAssessment(generateRequest);
+  print(_encoder.convert({
+    'assessmentId': generated.assessmentId,
+    'subject': generated.subject,
+    'scope': generated.scope,
+    'questions': generated.questions
+        .map((q) => {
+              'id': q.id,
+              'sequence': q.sequence,
+              'type': q.type.wireValue,
+              'question': q.question,
+              'choices': q.choices,
+            })
+        .toList(),
+  }));
+
+  print('\n=== POST /api/assessments/{id}/submit (request) ===');
+  final submitRequest = AssessmentSubmitRequest(
+    assessmentId: generated.assessmentId,
+    answers: generated.questions
+        .map((q) => AssessmentAnswerInput(questionId: q.id, answer: q.choices.isNotEmpty ? q.choices.first : '답변'))
+        .toList(),
+  );
+  print(_encoder.convert(submitRequest.toJson()));
+
+  print('\n=== POST /api/assessments/{id}/submit (response) ===');
+  final submitted = await repo.submitAssessment(submitRequest);
+  print(_encoder.convert({
+    'assessmentId': submitted.assessmentId,
+    'score': submitted.score,
+    'totalQuestions': submitted.totalQuestions,
+    'results': submitted.results
+        .map((r) => {
+              'id': r.id,
+              'sequence': r.sequence,
+              'type': r.type.wireValue,
+              'question': r.question,
+              'choices': r.choices,
+              'studentAnswer': r.studentAnswer,
+              'isCorrect': r.isCorrect,
+              'correctAnswer': r.correctAnswer,
+              'explanation': r.explanation,
+              'feedback': r.feedback,
+            })
+        .toList(),
+  }));
 }

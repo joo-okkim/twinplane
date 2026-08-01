@@ -418,6 +418,116 @@ Only `rewardEligible` plan items (i.e. not `fixed`/`break`) are submitted.
 `rewardResult.parentApprovalRequired` must always be `true` — the AI never
 confirms an allowance payout itself (spec §9).
 
+### `POST /api/assessments/generate`
+
+이해도 확인 (comprehension check). Offered once a `rewardEligible`,
+`evidenceRequired` plan item is marked complete (see `plan_item_tile.dart`'s
+teal 이해도 확인 pill). The request deliberately carries only the plan item
+id — the backend resolves subject/scope itself (see
+`AssessmentGenerateRequest`'s doc comment) so a client can't request a quiz
+for scope it doesn't own, and generates the questions with Claude from that
+scope. `MockAiTeacherRepository` returns 5 canned questions per subject
+instead of calling a real LLM, so `USE_MOCK=true` stays deterministic for
+dev/tests — the real backend does not need to match the mock's specific
+question wording, only this JSON shape.
+
+**Request**
+
+```json
+{
+  "planItemId": "plan-2"
+}
+```
+
+**Response** — `200`. `correctAnswer`/`explanation` are withheld until
+submission — see `POST /api/assessments/{id}/submit` below.
+
+```json
+{
+  "assessmentId": 1,
+  "subject": "수학",
+  "scope": "2학기 수학 단원평가 대비를 위해 일차함수 관련 내용을 학습해요.",
+  "questions": [
+    {
+      "id": 101,
+      "sequence": 1,
+      "type": "multiple_choice",
+      "question": "수학 학습 범위(2학기 수학 단원평가 대비를 위해 일차함수 관련 내용을 학습해요.)와 가장 관련 있는 활동은 무엇일까요?",
+      "choices": [
+        "오늘 배운 내용 복습하기",
+        "관련 없는 영상 시청하기",
+        "다른 과목 숙제하기",
+        "아무것도 하지 않기"
+      ]
+    },
+    {
+      "id": 103,
+      "sequence": 3,
+      "type": "short_answer",
+      "question": "오늘 \"2학기 수학 단원평가 대비를 위해 일차함수 관련 내용을 학습해요.\" 범위에서 배운 내용을 한 문장으로 설명해보세요.",
+      "choices": []
+    }
+  ]
+}
+```
+
+`type` is one of: `multiple_choice`, `short_answer`. `choices` is empty for
+`short_answer` questions.
+
+*(Full 5-question example: run `dart run tool/dump_api_examples.dart`.)*
+
+### `POST /api/assessments/{id}/submit`
+
+`{id}` is the `assessmentId` from the generate response above. Grades the
+student's answers — for `short_answer`, this requires real LLM judgment
+(the mock always marks short answers correct, which the real backend must
+not do). Reference implementation for the response shape:
+`lib/services/mock/mock_ai_teacher_repository.dart`'s `submitAssessment`.
+
+**Request**
+
+```json
+{
+  "answers": [
+    { "questionId": 101, "answer": "오늘 배운 내용 복습하기" },
+    { "questionId": 103, "answer": "일차함수는 기울기와 절편으로 그래프를 그릴 수 있어요." }
+  ]
+}
+```
+
+**Response** — `200`
+
+```json
+{
+  "assessmentId": 1,
+  "score": 100,
+  "totalQuestions": 5,
+  "results": [
+    {
+      "id": 101,
+      "sequence": 1,
+      "type": "multiple_choice",
+      "question": "수학 학습 범위(2학기 수학 단원평가 대비를 위해 일차함수 관련 내용을 학습해요.)와 가장 관련 있는 활동은 무엇일까요?",
+      "choices": [
+        "오늘 배운 내용 복습하기",
+        "관련 없는 영상 시청하기",
+        "다른 과목 숙제하기",
+        "아무것도 하지 않기"
+      ],
+      "studentAnswer": "오늘 배운 내용 복습하기",
+      "isCorrect": true,
+      "correctAnswer": "오늘 배운 내용 복습하기",
+      "explanation": "학습한 범위를 스스로 복습하는 것이 이해도를 높이는 가장 좋은 방법이에요.",
+      "feedback": "정답이에요!"
+    }
+  ]
+}
+```
+
+`score` is out of 100 (percentage), not a raw correct-answer count.
+
+*(Full 5-result example: run `dart run tool/dump_api_examples.dart`.)*
+
 ## Switching the app to the real backend
 
 No UI or provider code needs to change — only how `main.dart` picks a

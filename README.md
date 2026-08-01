@@ -16,6 +16,10 @@ the real Node/LLM backend exists.
 - **마이 (My)** — read-only student profile and parent settings.
 - **AI 코치** — quick-action bottom sheet wired to real modification/
   regenerate/reasons calls (not a freeform chat).
+- **이해도 확인 (comprehension check)** — after completing an
+  evidence-required plan item, students can generate a Claude-backed quiz
+  over its scope and get it graded (frontend + mock done; real backend
+  generation/grading still pending — see docs/PROGRESS.md).
 
 Plan generation accounts for achievement-rate load tiers, exam/deadline
 prioritization, a hard-difficulty cap, carry-over reduction, and same-day
@@ -65,6 +69,6 @@ client — flipping `USE_MOCK=false` requires no screen or provider changes.
 
 ## Status
 
-Frontend is feature-complete against the mock backend. Not yet built: auth,
-cross-day persistence, AI chat, OCR homework capture, dark mode, and a
-parent-facing app.
+Frontend is feature-complete against the mock backend. Not yet built: real
+backend generation/grading for 이해도 확인, cross-day persistence, AI chat,
+OCR homework capture, dark mode, and a parent-facing app.
