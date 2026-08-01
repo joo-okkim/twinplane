@@ -37,7 +37,7 @@ what's mocked, and what's blocked.
 | AI 코치 quick actions | Done | Bottom-sheet wired to real modification/regenerate/reasons calls (not a chat backend) |
 | HTTP client scaffold | Done | `HttpAiTeacherRepository`, `AppConfig`, startup error screen — verified end-to-end against the deployed backend |
 | Login / auth gate | Done | `LoginScreen` + `AuthGate` (`lib/screens/`); token persisted via `shared_preferences`; mock mode bypasses login entirely |
-| 이해도 확인 (comprehension check) | Frontend done, mock only | Teal pill on completed evidence-required plan items → `AssessmentScreen` (Claude-backed quiz) → `AssessmentResultScreen` (graded). `AssessmentProvider` + `generateAssessment`/`submitAssessment` on the repository interface; `MockAiTeacherRepository` grades deterministically (no real LLM call). See API_CONTRACT.md's `POST /api/assessments/generate` / `POST /api/assessments/{id}/submit` — backend still needs to implement both, including real short-answer grading |
+| 이해도 확인 (comprehension check) | Done, frontend + backend | Teal pill on completed evidence-required plan items → `AssessmentScreen` (Claude-backed quiz) → `AssessmentResultScreen` (graded). `AssessmentProvider` + `generateAssessment`/`submitAssessment` on the repository interface. `MockAiTeacherRepository` grades deterministically for dev/tests; `twinplane-backend`'s `src/routes/assessments.js` + `src/llm/claudeProvider.js` implement the real thing — Claude-generated questions, direct-comparison grading for multiple-choice, batched Claude grading for short-answer |
 
 ## Backend status (as of the DB + auth migration)
 
@@ -50,17 +50,14 @@ what's mocked, and what's blocked.
   password `5447`. No self-serve registration yet.
 - `AuthGate`/`LoginScreen` (`lib/screens/`) gate the real-HTTP path; mock
   mode is unaffected.
+- 이해도 확인 needs `ANTHROPIC_API_KEY` set on the deployed backend (see
+  `twinplane-backend/.env.example`) — confirm it's configured there before
+  relying on the feature against the real API.
 
 ## Explicitly out of scope so far
 
 - **Self-serve registration** — new accounts are created via the backend's
   `scripts/seed.js` only, no sign-up screen/endpoint.
-- **AI-generated/graded assessments (backend)** — the frontend's 이해도
-  확인 feature is done and calls `POST /api/assessments/generate` /
-  `POST /api/assessments/{id}/submit`, but the real Claude-backed
-  generation and (especially) short-answer grading are not implemented
-  server-side yet; `MockAiTeacherRepository` stands in with canned
-  questions and always-correct short-answer grading.
 - **AI chat** — the "AI 코치" floating button opens a fixed quick-action
   sheet, not a freeform LLM chat.
 - **OCR homework capture** — not built.
