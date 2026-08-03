@@ -34,7 +34,7 @@ class RewardScreen extends StatelessWidget {
             children: [
               const Text('나의 보상', style: TextStyle(fontSize: 21, fontWeight: FontWeight.w800)),
               const SizedBox(height: 2),
-              const Text('성취를 확인해보세요', style: TextStyle(fontSize: 12.5, color: AppColors.gray)),
+              Text('성취를 확인해보세요', style: TextStyle(fontSize: 12.5, color: AppColors.gray)),
               const SizedBox(height: 16),
               _StickerSummaryCard(earnedToday: earnedToday, maxToday: maxToday, streakDays: planProvider.streakDays),
               const SizedBox(height: 14),
@@ -65,10 +65,10 @@ class _StickerSummaryCard extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppColors.primary, Color(0xFF5B4FE9)],
+          colors: [AppColors.primary, const Color(0xFF5B4FE9)],
         ),
         boxShadow: [BoxShadow(color: AppColors.primary.withValues(alpha: 0.35), blurRadius: 24, offset: const Offset(0, 10))],
       ),
@@ -119,7 +119,7 @@ class _AllowanceLadderCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 14, offset: const Offset(0, 4))],
       ),
@@ -130,23 +130,23 @@ class _AllowanceLadderCard extends StatelessWidget {
             children: [
               const Text('이번 주 용돈 후보', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
               const Spacer(),
-              Text('${weeklyRate.round()}% 달성', style: const TextStyle(fontSize: 12.5, color: AppColors.gray, fontWeight: FontWeight.w600)),
+              Text('${weeklyRate.round()}% 달성', style: TextStyle(fontSize: 12.5, color: AppColors.gray, fontWeight: FontWeight.w600)),
             ],
           ),
           const SizedBox(height: 14),
           if (!policy.enabled || policy.conditions.isEmpty)
-            const Text('적용 가능한 용돈 정책이 없습니다.', style: TextStyle(fontSize: 12.5, color: AppColors.gray))
+            Text('적용 가능한 용돈 정책이 없습니다.', style: TextStyle(fontSize: 12.5, color: AppColors.gray))
           else
             for (final condition in policy.conditions) _tierRow(condition),
           const SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(color: AppColors.coralBg, borderRadius: BorderRadius.circular(20)),
-            child: const Row(
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.info_outline, size: 14, color: AppColors.coral),
-                SizedBox(width: 6),
+                const SizedBox(width: 6),
                 Text('최종 지급은 부모님 승인이 필요해요', style: TextStyle(fontSize: 11.5, color: AppColors.coral, fontWeight: FontWeight.w600)),
               ],
             ),
@@ -165,13 +165,13 @@ class _AllowanceLadderCard extends StatelessWidget {
           Icon(
             reached ? Icons.check_circle : Icons.radio_button_unchecked,
             size: 20,
-            color: reached ? AppColors.greenText : const Color(0xFFD9D9E3),
+            color: reached ? AppColors.greenText : AppColors.outline,
           ),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
               '달성률 ${condition.achievementRate.round()}% 이상',
-              style: TextStyle(fontSize: 13.5, color: reached ? Colors.black87 : AppColors.gray, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 13.5, color: reached ? AppColors.textPrimary : AppColors.gray, fontWeight: FontWeight.w600),
             ),
           ),
           Text(
@@ -201,7 +201,7 @@ class _StickerRulesPanel extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 14, offset: const Offset(0, 4))],
       ),
@@ -239,10 +239,10 @@ class _CheerFooter extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(color: AppColors.greenBg, borderRadius: BorderRadius.circular(16)),
-      child: const Row(
+      child: Row(
         children: [
           Icon(Icons.favorite_rounded, color: AppColors.greenText, size: 18),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Expanded(
             child: Text(
               '스티커보다 더 중요한 건 꾸준히 이어가는 마음이에요.',

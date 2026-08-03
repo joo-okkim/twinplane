@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/parent_settings.dart';
 import '../models/student_profile.dart';
 import '../providers/daily_plan_provider.dart';
+import '../providers/theme_mode_controller.dart';
 import '../theme/app_colors.dart';
 
 /// The 마이 (My) tab: a read-only profile/settings view built from the same
@@ -73,7 +74,7 @@ class _ProfileHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 14, offset: const Offset(0, 4))],
       ),
@@ -84,7 +85,7 @@ class _ProfileHeader extends StatelessWidget {
             backgroundColor: AppColors.primaryLight,
             child: Text(
               student.name.isNotEmpty ? student.name.substring(0, 1) : '?',
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: AppColors.primary),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: AppColors.primary),
             ),
           ),
           const SizedBox(width: 16),
@@ -94,7 +95,7 @@ class _ProfileHeader extends StatelessWidget {
               children: [
                 Text(student.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 4),
-                Text(_gradeLabel(student.gradeLevel), style: const TextStyle(fontSize: 12.5, color: AppColors.gray)),
+                Text(_gradeLabel(student.gradeLevel), style: TextStyle(fontSize: 12.5, color: AppColors.gray)),
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -102,9 +103,9 @@ class _ProfileHeader extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.local_fire_department, size: 14, color: AppColors.orange),
+                      Icon(Icons.local_fire_department, size: 14, color: AppColors.orange),
                       const SizedBox(width: 4),
-                      Text('$streakDays일 연속 학습', style: const TextStyle(fontSize: 11.5, color: AppColors.orange, fontWeight: FontWeight.w700)),
+                      Text('$streakDays일 연속 학습', style: TextStyle(fontSize: 11.5, color: AppColors.orange, fontWeight: FontWeight.w700)),
                     ],
                   ),
                 ),
@@ -129,7 +130,7 @@ class _SectionCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 14, offset: const Offset(0, 4))],
       ),
@@ -154,7 +155,7 @@ class _SectionCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 6),
         child: Row(
           children: [
-            Text(label, style: const TextStyle(fontSize: 13, color: AppColors.gray)),
+            Text(label, style: TextStyle(fontSize: 13, color: AppColors.gray)),
             const Spacer(),
             Text(value, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600)),
           ],
@@ -179,7 +180,7 @@ class _ParentSettingsCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 14, offset: const Offset(0, 4))],
       ),
@@ -188,14 +189,14 @@ class _ParentSettingsCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.shield_outlined, size: 18, color: AppColors.primary),
+              Icon(Icons.shield_outlined, size: 18, color: AppColors.primary),
               const SizedBox(width: 8),
               const Text('보호자 설정', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
               const Spacer(),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(color: AppColors.grayBg, borderRadius: BorderRadius.circular(20)),
-                child: const Text('읽기 전용', style: TextStyle(fontSize: 10.5, color: AppColors.gray, fontWeight: FontWeight.w600)),
+                child: Text('읽기 전용', style: TextStyle(fontSize: 10.5, color: AppColors.gray, fontWeight: FontWeight.w600)),
               ),
             ],
           ),
@@ -204,7 +205,7 @@ class _ParentSettingsCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 6),
             child: Row(
               children: [
-                const Text('일일 최대 학습시간', style: TextStyle(fontSize: 13, color: AppColors.gray)),
+                Text('일일 최대 학습시간', style: TextStyle(fontSize: 13, color: AppColors.gray)),
                 const Spacer(),
                 Text('${settings.maxDailyStudyMinutes}분', style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600)),
               ],
@@ -240,26 +241,54 @@ class _AppInfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 14, offset: const Offset(0, 4))],
       ),
       child: Column(
         children: [
-          const ListTile(
+          ListTile(
             leading: Icon(Icons.info_outline, color: AppColors.gray),
-            title: Text('앱 버전', style: TextStyle(fontSize: 13.5)),
+            title: const Text('앱 버전', style: TextStyle(fontSize: 13.5)),
             trailing: Text('1.0.0', style: TextStyle(fontSize: 13, color: AppColors.gray)),
           ),
+          const Divider(height: 1),
+          const _ThemeModeRow(),
           if (onLogout != null) ...[
             const Divider(height: 1),
             ListTile(
-              leading: const Icon(Icons.logout, color: AppColors.gray),
+              leading: Icon(Icons.logout, color: AppColors.gray),
               title: const Text('로그아웃', style: TextStyle(fontSize: 13.5)),
               onTap: onLogout,
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// Light/dark/system picker, backed by [ThemeModeController] (owned by
+/// [TwinplaneApp], an ancestor of every screen -- see app.dart).
+class _ThemeModeRow extends StatelessWidget {
+  const _ThemeModeRow();
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = context.watch<ThemeModeController>();
+    return ListTile(
+      leading: Icon(Icons.dark_mode_outlined, color: AppColors.gray),
+      title: const Text('테마', style: TextStyle(fontSize: 13.5)),
+      trailing: SegmentedButton<ThemeMode>(
+        segments: const [
+          ButtonSegment(value: ThemeMode.system, icon: Icon(Icons.settings_suggest_outlined), tooltip: '시스템 설정'),
+          ButtonSegment(value: ThemeMode.light, icon: Icon(Icons.light_mode_outlined), tooltip: '라이트'),
+          ButtonSegment(value: ThemeMode.dark, icon: Icon(Icons.dark_mode_outlined), tooltip: '다크'),
+        ],
+        selected: {controller.mode},
+        showSelectedIcon: false,
+        onSelectionChanged: (selection) => controller.setMode(selection.first),
+        style: const ButtonStyle(visualDensity: VisualDensity.compact),
       ),
     );
   }

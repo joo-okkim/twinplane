@@ -21,9 +21,9 @@ Color difficultyColor(Difficulty difficulty) => switch (difficulty) {
     };
 
 BadgeStyle difficultyBadgeStyle(Difficulty difficulty) => switch (difficulty) {
-      Difficulty.easy => const BadgeStyle(AppColors.greenBg, AppColors.greenText),
-      Difficulty.normal => const BadgeStyle(AppColors.blueBg, AppColors.blue),
-      Difficulty.hard => const BadgeStyle(AppColors.coralBg, AppColors.coral),
+      Difficulty.easy => BadgeStyle(AppColors.greenBg, AppColors.greenText),
+      Difficulty.normal => BadgeStyle(AppColors.blueBg, AppColors.blue),
+      Difficulty.hard => BadgeStyle(AppColors.coralBg, AppColors.coral),
     };
 
 String planTypeLabel(PlanType type) => switch (type) {
@@ -37,13 +37,13 @@ String planTypeLabel(PlanType type) => switch (type) {
     };
 
 BadgeStyle planTypeBadgeStyle(PlanType type) => switch (type) {
-      PlanType.required => const BadgeStyle(AppColors.primaryLight, AppColors.primary),
-      PlanType.recommended => const BadgeStyle(AppColors.greenBg, AppColors.greenText),
-      PlanType.optional => const BadgeStyle(AppColors.blueBg, AppColors.blue),
-      PlanType.bonus => const BadgeStyle(AppColors.orangeBg, AppColors.orange),
-      PlanType.routine => const BadgeStyle(AppColors.grayBg, AppColors.gray),
-      PlanType.breakTime => const BadgeStyle(AppColors.tealBg, AppColors.teal),
-      PlanType.fixed => const BadgeStyle(AppColors.grayBg, AppColors.gray),
+      PlanType.required => BadgeStyle(AppColors.primaryLight, AppColors.primary),
+      PlanType.recommended => BadgeStyle(AppColors.greenBg, AppColors.greenText),
+      PlanType.optional => BadgeStyle(AppColors.blueBg, AppColors.blue),
+      PlanType.bonus => BadgeStyle(AppColors.orangeBg, AppColors.orange),
+      PlanType.routine => BadgeStyle(AppColors.grayBg, AppColors.gray),
+      PlanType.breakTime => BadgeStyle(AppColors.tealBg, AppColors.teal),
+      PlanType.fixed => BadgeStyle(AppColors.grayBg, AppColors.gray),
     };
 
 /// Icon + tint shown in each timeline row's leading icon box, guessed from

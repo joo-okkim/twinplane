@@ -23,9 +23,9 @@ class AppBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [BoxShadow(color: Color(0x14000000), blurRadius: 12, offset: Offset(0, -2))],
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        boxShadow: const [BoxShadow(color: Color(0x14000000), blurRadius: 12, offset: Offset(0, -2))],
       ),
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: SafeArea(
@@ -92,10 +92,10 @@ class _AiFloatingButton extends StatelessWidget {
               height: 52,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [AppColors.primary, Color(0xFF5B4FE9)],
+                  colors: [AppColors.primary, const Color(0xFF5B4FE9)],
                 ),
                 boxShadow: [BoxShadow(color: AppColors.primary.withValues(alpha: 0.45), blurRadius: 16, offset: const Offset(0, 6))],
               ),
@@ -103,7 +103,7 @@ class _AiFloatingButton extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 2),
-          const Text('AI 코치', style: TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.w700)),
+          Text('AI 코치', style: TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.w700)),
         ],
       ),
     );

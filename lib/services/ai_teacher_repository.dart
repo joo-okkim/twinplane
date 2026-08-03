@@ -4,12 +4,12 @@ import '../models/assessment_generate_response.dart';
 import '../models/assessment_submit_request.dart';
 import '../models/assessment_submit_response.dart';
 import '../models/daily_plan_response.dart';
+import '../models/daily_review_request.dart';
 import '../models/daily_review_response.dart';
 import '../models/exam_info.dart';
 import '../models/incomplete_plan.dart';
 import '../models/modification_request.dart';
 import '../models/modification_result.dart';
-import '../models/daily_review_request.dart';
 import '../models/parent_settings.dart';
 import '../models/sticker_policy.dart';
 import '../models/student_profile.dart';
@@ -72,8 +72,12 @@ abstract class AiTeacherRepository {
 
   /// Generates a 이해도 확인 (comprehension check) quiz for a completed,
   /// evidence-required plan item. See POST /api/assessments/generate.
-  Future<AssessmentGenerateResponse> generateAssessment(AssessmentGenerateRequest request);
+  Future<AssessmentGenerateResponse> generateAssessment(
+    AssessmentGenerateRequest request,
+  );
 
   /// Submits answers for grading. See POST /api/assessments/{id}/submit.
-  Future<AssessmentSubmitResponse> submitAssessment(AssessmentSubmitRequest request);
+  Future<AssessmentSubmitResponse> submitAssessment(
+    AssessmentSubmitRequest request,
+  );
 }

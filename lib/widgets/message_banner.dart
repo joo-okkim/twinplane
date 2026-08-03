@@ -12,9 +12,9 @@ class MessageBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (bg, border, accent) = switch (tone) {
-      'encouraging' => (AppColors.greenBg, const Color(0xFFBFE8CE), AppColors.greenText),
-      'concerned' => (AppColors.orangeBg, const Color(0xFFF6D5A8), AppColors.orange),
-      _ => (AppColors.blueBg, const Color(0xFFBFDBFE), AppColors.blue),
+      'encouraging' => (AppColors.greenBg, AppColors.isDark ? const Color(0xFF265C40) : const Color(0xFFBFE8CE), AppColors.greenText),
+      'concerned' => (AppColors.orangeBg, AppColors.isDark ? const Color(0xFF6B4A1E) : const Color(0xFFF6D5A8), AppColors.orange),
+      _ => (AppColors.blueBg, AppColors.isDark ? const Color(0xFF2C4770) : const Color(0xFFBFDBFE), AppColors.blue),
     };
 
     return Container(
@@ -44,7 +44,7 @@ class MessageBanner extends StatelessWidget {
               children: [
                 Text(title, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: accent)),
                 const SizedBox(height: 6),
-                Text(message, style: const TextStyle(fontSize: 12.5, color: Colors.black54, height: 1.4)),
+                Text(message, style: TextStyle(fontSize: 12.5, color: AppColors.textMuted, height: 1.4)),
               ],
             ),
           ),
@@ -52,7 +52,7 @@ class MessageBanner extends StatelessWidget {
           Container(
             width: 44,
             height: 44,
-            decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.6), shape: BoxShape.circle),
+            decoration: BoxDecoration(color: AppColors.surface.withValues(alpha: 0.6), shape: BoxShape.circle),
             child: Icon(Icons.smart_toy_outlined, color: accent, size: 24),
           ),
         ],

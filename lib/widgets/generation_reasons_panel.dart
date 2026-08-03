@@ -11,7 +11,7 @@ class GenerationReasonsPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 3))],
       ),
@@ -19,7 +19,7 @@ class GenerationReasonsPanel extends StatelessWidget {
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           title: const Text('왜 이렇게 계획했나요?', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
-          leading: const Icon(Icons.auto_awesome, color: AppColors.primary, size: 20),
+          leading: Icon(Icons.auto_awesome, color: AppColors.primary, size: 20),
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
           collapsedShape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
           children: reasons
@@ -28,8 +28,8 @@ class GenerationReasonsPanel extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.only(top: 2),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
                           child: Icon(Icons.circle, size: 5, color: AppColors.primary),
                         ),
                         const SizedBox(width: 8),

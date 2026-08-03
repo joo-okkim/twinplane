@@ -196,13 +196,13 @@ class _TodayPlanScreenState extends State<TodayPlanScreen> {
                                 height: 52,
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
+                                    backgroundColor: AppColors.surface,
                                     foregroundColor: AppColors.gray,
                                     elevation: 0,
                                     padding: EdgeInsets.zero,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
-                                      side: const BorderSide(color: Color(0xFFE4E1F0)),
+                                      side: BorderSide(color: AppColors.divider),
                                     ),
                                   ),
                                   onPressed: () => _showReasons(plan.generationReasons),
@@ -238,24 +238,24 @@ class _ParentAttentionBanner extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.coralBg,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFF3C6C1)),
+        border: Border.all(color: AppColors.isDark ? const Color(0xFF6B3733) : const Color(0xFFF3C6C1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.notifications_active_outlined, size: 18, color: AppColors.coral),
+              Icon(Icons.notifications_active_outlined, size: 18, color: AppColors.coral),
               const SizedBox(width: 6),
-              const Text('보호자 확인이 필요해요',
+              Text('보호자 확인이 필요해요',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.coral)),
             ],
           ),
           const SizedBox(height: 8),
-          Text(parentMessage.summary, style: const TextStyle(fontSize: 12.5, color: Colors.black54, height: 1.4)),
+          Text(parentMessage.summary, style: TextStyle(fontSize: 12.5, color: AppColors.textMuted, height: 1.4)),
           for (final item in parentMessage.attentionItems) ...[
             const SizedBox(height: 4),
-            Text('· $item', style: const TextStyle(fontSize: 12.5, color: Colors.black54, height: 1.4)),
+            Text('· $item', style: TextStyle(fontSize: 12.5, color: AppColors.textMuted, height: 1.4)),
           ],
         ],
       ),

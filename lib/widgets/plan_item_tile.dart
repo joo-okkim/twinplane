@@ -47,14 +47,14 @@ class PlanItemTile extends StatelessWidget {
                   height: 12,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: completed ? AppColors.primary : Colors.white,
+                    color: completed ? AppColors.primary : AppColors.surface,
                     border: Border.all(
-                      color: isActive || completed ? AppColors.primary : const Color(0xFFD9D9E3),
+                      color: isActive || completed ? AppColors.primary : AppColors.outline,
                       width: 2,
                     ),
                   ),
                 ),
-                if (!isLast) Expanded(child: Container(width: 2, color: const Color(0xFFE4E1F0))),
+                if (!isLast) Expanded(child: Container(width: 2, color: AppColors.divider)),
               ],
             ),
           ),
@@ -67,7 +67,7 @@ class PlanItemTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(item.startTime, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                  Text(item.endTime, style: const TextStyle(fontSize: 11, color: AppColors.gray)),
+                  Text(item.endTime, style: TextStyle(fontSize: 11, color: AppColors.gray)),
                 ],
               ),
             ),
@@ -79,7 +79,7 @@ class PlanItemTile extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: isFixedOrBreak ? const Color(0xFFF7F7FA) : Colors.white,
+                  color: isFixedOrBreak ? AppColors.surfaceMuted : AppColors.surface,
                   borderRadius: BorderRadius.circular(16),
                   border: isActive ? Border.all(color: AppColors.primary, width: 1.5) : null,
                   boxShadow: isFixedOrBreak
@@ -109,7 +109,7 @@ class PlanItemTile extends StatelessWidget {
                                     fontWeight: FontWeight.w700,
                                     fontSize: 14.5,
                                     decoration: completed ? TextDecoration.lineThrough : null,
-                                    color: completed ? AppColors.gray : Colors.black87,
+                                    color: completed ? AppColors.gray : AppColors.textPrimary,
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -118,26 +118,26 @@ class PlanItemTile extends StatelessWidget {
                                 InkWell(
                                   borderRadius: BorderRadius.circular(20),
                                   onTap: onRequestModify,
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(4),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4),
                                     child: Icon(Icons.more_vert, size: 18, color: AppColors.gray),
                                   ),
                                 ),
                             ],
                           ),
                           const SizedBox(height: 4),
-                          Text(item.description, style: const TextStyle(fontSize: 12.5, color: AppColors.gray)),
+                          Text(item.description, style: TextStyle(fontSize: 12.5, color: AppColors.gray)),
                           if (item.adjustmentReason != null) ...[
                             const SizedBox(height: 6),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Icon(Icons.auto_awesome, size: 13, color: AppColors.teal),
+                                Icon(Icons.auto_awesome, size: 13, color: AppColors.teal),
                                 const SizedBox(width: 4),
                                 Expanded(
                                   child: Text(
                                     item.adjustmentReason!,
-                                    style: const TextStyle(fontSize: 12, color: AppColors.teal, height: 1.3),
+                                    style: TextStyle(fontSize: 12, color: AppColors.teal, height: 1.3),
                                   ),
                                 ),
                               ],
@@ -162,11 +162,11 @@ class PlanItemTile extends StatelessWidget {
                               child: Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                 decoration: BoxDecoration(color: AppColors.tealBg, borderRadius: BorderRadius.circular(20)),
-                                child: const Row(
+                                child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Icon(Icons.quiz_outlined, size: 14, color: AppColors.teal),
-                                    SizedBox(width: 4),
+                                    const SizedBox(width: 4),
                                     Text('이해도 확인', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.teal)),
                                   ],
                                 ),
@@ -199,7 +199,7 @@ class PlanItemTile extends StatelessWidget {
   Widget _durationPill(int minutes) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
         decoration: BoxDecoration(color: AppColors.grayBg, borderRadius: BorderRadius.circular(20)),
-        child: Text(formatDuration(minutes), style: const TextStyle(fontSize: 11, color: AppColors.gray, fontWeight: FontWeight.w600)),
+        child: Text(formatDuration(minutes), style: TextStyle(fontSize: 11, color: AppColors.gray, fontWeight: FontWeight.w600)),
       );
 }
 
@@ -221,7 +221,7 @@ class _TimelineCheckbox extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: completed ? AppColors.primary : Colors.transparent,
-          border: Border.all(color: completed || active ? AppColors.primary : const Color(0xFFD9D9E3), width: 2),
+          border: Border.all(color: completed || active ? AppColors.primary : AppColors.outline, width: 2),
         ),
         child: completed ? const Icon(Icons.check, size: 16, color: Colors.white) : null,
       ),

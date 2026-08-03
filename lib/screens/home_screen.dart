@@ -144,7 +144,7 @@ class _HomeHeader extends StatelessWidget {
           backgroundColor: AppColors.primaryLight,
           child: Text(
             studentName.isNotEmpty ? studentName.substring(0, 1) : '?',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
               color: AppColors.primary,
@@ -178,7 +178,7 @@ class _HomeHeader extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 formatKoreanDate(date),
-                style: const TextStyle(fontSize: 12.5, color: AppColors.gray),
+                style: TextStyle(fontSize: 12.5, color: AppColors.gray),
               ),
             ],
           ),
@@ -191,8 +191,8 @@ class _HomeHeader extends StatelessWidget {
               onTap: () => ScaffoldMessenger.of(
                 context,
               ).showSnackBar(const SnackBar(content: Text('준비 중이에요.'))),
-              child: const Padding(
-                padding: EdgeInsets.all(4),
+              child: Padding(
+                padding: const EdgeInsets.all(4),
                 child: Icon(
                   Icons.notifications_none_rounded,
                   color: AppColors.gray,
@@ -214,7 +214,7 @@ class _HomeHeader extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.local_fire_department,
                         size: 13,
                         color: AppColors.orange,
@@ -222,7 +222,7 @@ class _HomeHeader extends StatelessWidget {
                       const SizedBox(width: 3),
                       Text(
                         '$streakDays일',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 11,
                           color: AppColors.orange,
                           fontWeight: FontWeight.w700,
@@ -243,7 +243,7 @@ class _HomeHeader extends StatelessWidget {
                   ),
                   child: Text(
                     'Lv.$level',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 11,
                       color: AppColors.primary,
                       fontWeight: FontWeight.w700,
@@ -273,7 +273,7 @@ class _ConditionCheckCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 3))],
       ),
@@ -328,10 +328,10 @@ class _AiHeroCard extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppColors.primary, Color(0xFF5B4FE9)],
+          colors: [AppColors.primary, const Color(0xFF5B4FE9)],
         ),
         boxShadow: [
           BoxShadow(
@@ -487,7 +487,7 @@ class _ProgressDashboardCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -513,7 +513,7 @@ class _ProgressDashboardCard extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   minimumSize: const Size(10, 10),
                 ),
-                child: const Text(
+                child: Text(
                   '자세히 보기 >',
                   style: TextStyle(fontSize: 12, color: AppColors.gray),
                 ),
@@ -536,7 +536,7 @@ class _ProgressDashboardCard extends StatelessWidget {
                         value: completionRate.clamp(0, 1),
                         strokeWidth: 8,
                         backgroundColor: AppColors.grayBg,
-                        valueColor: const AlwaysStoppedAnimation(
+                        valueColor: AlwaysStoppedAnimation(
                           AppColors.greenText,
                         ),
                       ),
@@ -607,7 +607,7 @@ class _ProgressDashboardCard extends StatelessWidget {
           const SizedBox(width: 6),
           Text(
             label,
-            style: const TextStyle(fontSize: 12.5, color: AppColors.gray),
+            style: TextStyle(fontSize: 12.5, color: AppColors.gray),
           ),
           const Spacer(),
           Text(
@@ -627,7 +627,7 @@ class _ProgressDashboardCard extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: const TextStyle(fontSize: 11, color: AppColors.gray),
+                style: TextStyle(fontSize: 11, color: AppColors.gray),
               ),
               Text(
                 value,
@@ -654,7 +654,7 @@ class _NowCard extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
@@ -666,7 +666,7 @@ class _NowCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            const Icon(Icons.celebration_outlined, color: AppColors.greenText),
+            Icon(Icons.celebration_outlined, color: AppColors.greenText),
             const SizedBox(width: 10),
             const Expanded(
               child: Text(
@@ -683,7 +683,7 @@ class _NowCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: AppColors.primary.withValues(alpha: 0.25),
@@ -730,7 +730,7 @@ class _NowCard extends StatelessWidget {
                     color: AppColors.gray.withValues(alpha: 0.3),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   '우선순위',
                   style: TextStyle(
                     fontSize: 10.5,
@@ -751,7 +751,7 @@ class _NowCard extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             current.description,
-            style: const TextStyle(fontSize: 12.5, color: AppColors.gray),
+            style: TextStyle(fontSize: 12.5, color: AppColors.gray),
           ),
           const SizedBox(height: 10),
           Wrap(
@@ -767,7 +767,7 @@ class _NowCard extends StatelessWidget {
               ),
               _badge(
                 formatDuration(current.durationMinutes),
-                const BadgeStyle(AppColors.grayBg, AppColors.gray),
+                BadgeStyle(AppColors.grayBg, AppColors.gray),
               ),
             ],
           ),
@@ -831,7 +831,7 @@ class _MiniTimelineCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -857,7 +857,7 @@ class _MiniTimelineCard extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   minimumSize: const Size(10, 10),
                 ),
-                child: const Text(
+                child: Text(
                   '전체 보기 >',
                   style: TextStyle(fontSize: 12, color: AppColors.gray),
                 ),
@@ -896,7 +896,7 @@ class _MiniTimelineCard extends StatelessWidget {
               shape: BoxShape.circle,
               color: done
                   ? AppColors.greenText
-                  : (trackable ? AppColors.primary : const Color(0xFFD9D9E3)),
+                  : (trackable ? AppColors.primary : AppColors.outline),
             ),
           ),
           Expanded(
@@ -905,7 +905,7 @@ class _MiniTimelineCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13,
                 decoration: done ? TextDecoration.lineThrough : null,
-                color: done ? AppColors.gray : Colors.black87,
+                color: done ? AppColors.gray : AppColors.textPrimary,
               ),
               overflow: TextOverflow.ellipsis,
             ),
@@ -992,7 +992,7 @@ class _InsightRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -1009,7 +1009,7 @@ class _InsightRow extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             label,
-            style: const TextStyle(fontSize: 10.5, color: AppColors.gray),
+            style: TextStyle(fontSize: 10.5, color: AppColors.gray),
           ),
           if (value != null) ...[
             const SizedBox(height: 2),
@@ -1021,7 +1021,7 @@ class _InsightRow extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             caption,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 10.5,
               color: AppColors.gray,
               height: 1.3,

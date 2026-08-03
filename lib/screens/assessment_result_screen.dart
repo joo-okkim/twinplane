@@ -53,7 +53,7 @@ class _QuestionResultCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 3))],
       ),
@@ -83,15 +83,15 @@ class _QuestionResultCard extends StatelessWidget {
           ],
           if (result.type == AssessmentQuestionType.multipleChoice && result.choices.isNotEmpty) ...[
             const SizedBox(height: 6),
-            Text('보기: ${result.choices.join(', ')}', style: const TextStyle(fontSize: 12, color: AppColors.gray)),
+            Text('보기: ${result.choices.join(', ')}', style: TextStyle(fontSize: 12, color: AppColors.gray)),
           ],
           const SizedBox(height: 8),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.auto_awesome, size: 13, color: AppColors.teal),
+              Icon(Icons.auto_awesome, size: 13, color: AppColors.teal),
               const SizedBox(width: 4),
-              Expanded(child: Text(result.feedback, style: const TextStyle(fontSize: 12.5, color: AppColors.teal, height: 1.3))),
+              Expanded(child: Text(result.feedback, style: TextStyle(fontSize: 12.5, color: AppColors.teal, height: 1.3))),
             ],
           ),
         ],

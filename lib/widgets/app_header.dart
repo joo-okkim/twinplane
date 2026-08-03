@@ -29,7 +29,7 @@ class AppHeader extends StatelessWidget {
             children: [
               Text(formatKoreanDate(date), style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w800)),
               const SizedBox(height: 2),
-              Text(subtitle, style: const TextStyle(fontSize: 12.5, color: AppColors.gray)),
+              Text(subtitle, style: TextStyle(fontSize: 12.5, color: AppColors.gray)),
             ],
           ),
         ),
@@ -38,9 +38,9 @@ class AppHeader extends StatelessWidget {
           decoration: BoxDecoration(color: AppColors.orangeBg, borderRadius: BorderRadius.circular(20)),
           child: Row(
             children: [
-              const Icon(Icons.local_fire_department, size: 15, color: AppColors.orange),
+              Icon(Icons.local_fire_department, size: 15, color: AppColors.orange),
               const SizedBox(width: 4),
-              Text('$streakDays일 연속', style: const TextStyle(fontSize: 12, color: AppColors.orange, fontWeight: FontWeight.w700)),
+              Text('$streakDays일 연속', style: TextStyle(fontSize: 12, color: AppColors.orange, fontWeight: FontWeight.w700)),
             ],
           ),
         ),
@@ -50,7 +50,7 @@ class AppHeader extends StatelessWidget {
           backgroundColor: AppColors.primaryLight,
           child: Text(
             studentName.isNotEmpty ? studentName.substring(0, 1) : '?',
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.primary),
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.primary),
           ),
         ),
       ],

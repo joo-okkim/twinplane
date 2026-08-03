@@ -98,10 +98,10 @@ class _MainShellState extends State<MainShell> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                children: const [
+                children: [
                   Icon(Icons.smart_toy_outlined, color: AppColors.primary),
-                  SizedBox(width: 8),
-                  Text('AI 코치에게 물어보기', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                  const SizedBox(width: 8),
+                  const Text('AI 코치에게 물어보기', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                 ],
               ),
               const SizedBox(height: 12),
@@ -121,7 +121,7 @@ class _MainShellState extends State<MainShell> {
       contentPadding: EdgeInsets.zero,
       leading: Icon(icon, color: AppColors.primary, size: 22),
       title: Text(label, style: const TextStyle(fontSize: 14.5)),
-      trailing: const Icon(Icons.chevron_right, color: AppColors.gray),
+      trailing: Icon(Icons.chevron_right, color: AppColors.gray),
       onTap: onTap,
     );
   }

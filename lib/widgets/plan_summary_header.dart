@@ -23,7 +23,7 @@ class PlanSummaryHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 14, offset: const Offset(0, 4))],
       ),
@@ -32,7 +32,7 @@ class PlanSummaryHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.auto_awesome, size: 18, color: AppColors.primary),
+              Icon(Icons.auto_awesome, size: 18, color: AppColors.primary),
               const SizedBox(width: 6),
               Text(summary.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
             ],
@@ -69,7 +69,7 @@ class PlanSummaryHeader extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(color: AppColors.coralBg, borderRadius: BorderRadius.circular(20)),
-                child: const Text('부모님 승인 필요',
+                child: Text('부모님 승인 필요',
                     style: TextStyle(fontSize: 11.5, color: AppColors.coral, fontWeight: FontWeight.w600)),
               ),
             ],
@@ -93,15 +93,15 @@ class PlanSummaryHeader extends StatelessWidget {
               value: completionRate.clamp(0, 1),
               strokeWidth: 6,
               backgroundColor: AppColors.grayBg,
-              valueColor: const AlwaysStoppedAnimation(AppColors.primary),
+              valueColor: AlwaysStoppedAnimation(AppColors.primary),
             ),
           ),
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text('${(completionRate.clamp(0, 1) * 100).round()}%',
-                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.primary)),
-              const Text('완료율', style: TextStyle(fontSize: 9, color: AppColors.gray)),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.primary)),
+              Text('완료율', style: TextStyle(fontSize: 9, color: AppColors.gray)),
             ],
           ),
         ],
@@ -113,7 +113,7 @@ class PlanSummaryHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 11.5, color: AppColors.gray)),
+        Text(label, style: TextStyle(fontSize: 11.5, color: AppColors.gray)),
         const SizedBox(height: 2),
         Text(value, style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w800, color: color)),
       ],

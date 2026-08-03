@@ -40,12 +40,12 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
             switch (provider.phase) {
               case AssessmentPhase.idle:
               case AssessmentPhase.generating:
-                return const Center(
+                return Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      CircularProgressIndicator(),
-                      SizedBox(height: 16),
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 16),
                       Text('AI가 문제를 만들고 있어요...', style: TextStyle(color: AppColors.gray)),
                     ],
                   ),
@@ -107,7 +107,7 @@ class _AnsweringBody extends StatelessWidget {
                 decoration: BoxDecoration(color: AppColors.primaryLight, borderRadius: BorderRadius.circular(16)),
                 child: Text(
                   '${assessment.subject} · ${assessment.scope}',
-                  style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.primary),
+                  style: TextStyle(fontWeight: FontWeight.w700, color: AppColors.primary),
                 ),
               ),
               const SizedBox(height: 16),
@@ -150,7 +150,7 @@ class _QuestionCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 3))],
       ),

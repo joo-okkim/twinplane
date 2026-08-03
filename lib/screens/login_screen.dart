@@ -69,17 +69,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: 64,
                     height: 64,
                     alignment: Alignment.center,
-                    decoration: const BoxDecoration(color: AppColors.primaryLight, shape: BoxShape.circle),
-                    child: const Icon(Icons.school_rounded, color: AppColors.primary, size: 32),
+                    decoration: BoxDecoration(color: AppColors.primaryLight, shape: BoxShape.circle),
+                    child: Icon(Icons.school_rounded, color: AppColors.primary, size: 32),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
+                  Text(
                     'AI Teacher',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: Colors.black87),
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
+                  Text(
                     '로그인하고 오늘의 학습 플랜을 확인해요',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 13, color: AppColors.gray),
@@ -102,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   if (_errorMessage != null) ...[
                     const SizedBox(height: 12),
-                    Text(_errorMessage!, style: const TextStyle(color: AppColors.coral, fontSize: 12.5)),
+                    Text(_errorMessage!, style: TextStyle(color: AppColors.coral, fontSize: 12.5)),
                   ],
                   const SizedBox(height: 20),
                   SizedBox(
